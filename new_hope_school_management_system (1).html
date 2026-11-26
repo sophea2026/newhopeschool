@@ -1,0 +1,2173 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>សាលាញូហូព NEW HOPE SCHOOL - ប្រព័ន្ធគ្រប់គ្រងសាលារៀន</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Battambang, Moul, and Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@300;400;700;900&family=Inter:wght@400;500;600;700&family=Moul&family=Moulpali&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Battambang', 'Inter', 'sans-serif'],
+                        moul: ['Moul', 'serif'],
+                        moulpali: ['Moulpali', 'serif'],
+                        inter: ['Inter', 'sans-serif']
+                    },
+                    colors: {
+                        hope: {
+                            blue: '#1e3a8a',
+                            light: '#eff6ff',
+                            gold: '#d97706',
+                            goldLight: '#fef3c7',
+                            navy: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Battambang', 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+        .font-moul {
+            font-family: 'Moul', serif;
+        }
+        .font-moulpali {
+            font-family: 'Moulpali', serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Cambodian Ornate Border Styles for Certificates & Honor Roll */
+        .khmer-cert-border {
+            border: 12px double #b45309;
+            outline: 3px solid #1e3a8a;
+            outline-offset: -18px;
+            background: radial-gradient(circle at center, #ffffff 60%, #fffbeb 100%);
+            position: relative;
+        }
+        .khmer-corner {
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-color: #b45309;
+            border-style: solid;
+        }
+        .khmer-corner-tl { top: 14px; left: 14px; border-width: 4px 0 0 4px; }
+        .khmer-corner-tr { top: 14px; right: 14px; border-width: 4px 4px 0 0; }
+        .khmer-corner-bl { bottom: 14px; left: 14px; border-width: 0 0 4px 4px; }
+        .khmer-corner-br { bottom: 14px; right: 14px; border-width: 0 4px 4px 0; }
+
+        /* Print Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-area, #printable-area * {
+                visibility: visible;
+            }
+            #printable-area {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                background: white !important;
+                z-index: 99999;
+            }
+            .no-print {
+                display: none !important;
+            }
+            @page {
+                margin: 0.5cm;
+            }
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased selection:bg-blue-200">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 no-print"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4 no-print">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 transform transition-all">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900" id="confirm-title">បញ្ជាក់ការលុបទិន្នន័យ</h3>
+                    <p class="text-sm text-slate-500 mt-1" id="confirm-message">តើអ្នកពិតជាចង់លុបទិន្នន័យនេះមែនទេ? សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។</p>
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="closeConfirmModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-50 font-medium transition">បោះបង់</button>
+                <button id="confirm-yes-btn" class="px-5 py-2.5 rounded-xl bg-red-600 text-white hover:bg-red-700 font-medium shadow-md shadow-red-600/20 transition">យល់ព្រមលុប</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Layout Wrapper -->
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Mobile Sidebar Backdrop -->
+        <div id="sidebar-backdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 z-30 hidden lg:hidden no-print"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900 text-white flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 shadow-2xl no-print">
+            <!-- School Brand Header -->
+            <div class="p-5 border-b border-white/10 flex items-center gap-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-slate-950 shadow-lg shrink-0">
+                    <i class="fa-solid fa-graduation-cap text-2xl"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h1 class="font-moul text-amber-400 text-sm tracking-wide truncate">សាលាញូហូព</h1>
+                    <p class="font-inter text-xs font-bold text-blue-200 tracking-wider">NEW HOPE SCHOOL</p>
+                </div>
+                <button onclick="toggleSidebar()" class="ml-auto lg:hidden text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1" id="nav-menu">
+                <!-- Populated dynamically by JS -->
+            </nav>
+
+            <!-- Footer Info -->
+            <div class="p-4 border-t border-white/10 text-xs text-slate-400 bg-slate-950/40">
+                <div class="flex items-center justify-between">
+                    <span>ឆ្នាំសិក្សា ២០២៦-២០២៧</span>
+                    <span class="inline-flex items-center gap-1 text-emerald-400">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> DB រួចរាល់
+                    </span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+            
+            <!-- Top Header Bar -->
+            <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-3.5 flex items-center justify-between gap-4 shadow-sm z-20 no-print">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="lg:hidden p-2.5 rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
+                        <i class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                    <div>
+                        <h2 id="page-title" class="text-lg sm:text-xl font-bold text-slate-800">ផ្ទាំងគ្រប់គ្រងទូទៅ</h2>
+                        <p id="page-subtitle" class="text-xs text-slate-500 hidden sm:block">ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យសាលាញូហូព (New Hope School Management System)</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="hidden md:flex items-center gap-2 bg-blue-50 text-blue-900 px-3.5 py-2 rounded-xl border border-blue-100 text-xs font-medium">
+                        <i class="fa-regular fa-calendar-check text-blue-600"></i>
+                        <span id="current-date-display">ថ្ងៃព្រហស្បតិ៍ ទី២៦ ខែវិច្ឆិកា ឆ្នាំ២០២៦</span>
+                    </div>
+                    <button onclick="switchTab('database')" class="p-2.5 rounded-xl bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200 transition flex items-center gap-2 text-xs font-bold" title="គ្រប់គ្រង Database">
+                        <i class="fa-solid fa-database"></i>
+                        <span class="hidden sm:inline">Database</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dynamic View Container -->
+            <main id="app-content" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+                <!-- Module content injected here -->
+            </main>
+        </div>
+    </div>
+
+    <!-- Universal Modal for Add / Edit Forms -->
+    <div id="form-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 hidden items-center justify-center p-4 overflow-y-auto no-print">
+        <div class="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden my-auto">
+            <div class="px-6 py-4 bg-gradient-to-r from-blue-900 to-blue-800 text-white flex items-center justify-between">
+                <h3 id="modal-title" class="text-lg font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-amber-400"></i>
+                    <span>បញ្ចូលទិន្នន័យ</span>
+                </h3>
+                <button onclick="closeFormModal()" class="text-white/80 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <div id="modal-body" class="p-6 max-h-[80vh] overflow-y-auto">
+                <!-- Dynamic Form HTML -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. DATABASE & STATE MANAGEMENT (LocalStorage Persistent DB)
+        // =========================================================================
+        const DB_KEY = 'NEW_HOPE_SCHOOL_DB_V1';
+
+        const defaultDatabase = {
+            levels: [
+                { id: 'LVL-01', nameKh: 'មត្តេយ្យសិក្សា', nameEn: 'Kindergarten', fee: 25, teacherId: 'TCH-01', room: 'បន្ទប់ A1' },
+                { id: 'LVL-02', nameKh: 'កម្រិត ១', nameEn: 'Level 1 (Elementary)', fee: 30, teacherId: 'TCH-02', room: 'បន្ទប់ A2' },
+                { id: 'LVL-03', nameKh: 'កម្រិត ២', nameEn: 'Level 2 (Elementary)', fee: 35, teacherId: 'TCH-03', room: 'បន្ទប់ B1' },
+                { id: 'LVL-04', nameKh: 'កម្រិត ៣', nameEn: 'Level 3 (Intermediate)', fee: 40, teacherId: 'TCH-04', room: 'បន្ទប់ B2' },
+                { id: 'LVL-05', nameKh: 'កម្រិត ៤', nameEn: 'Level 4 (Intermediate)', fee: 45, teacherId: 'TCH-05', room: 'បន្ទប់ C1' },
+                { id: 'LVL-06', nameKh: 'កម្រិត ៥', nameEn: 'Level 5 (Upper-Int)', fee: 50, teacherId: 'TCH-01', room: 'បន្ទប់ C2' },
+                { id: 'LVL-07', nameKh: 'កម្រិត ៦', nameEn: 'Level 6 (Advanced)', fee: 55, teacherId: 'TCH-02', room: 'បន្ទប់ D1' },
+                { id: 'LVL-08', nameKh: 'ថ្នាក់កុំព្យូទ័ររដ្ឋបាល', nameEn: 'Computer Office Course', fee: 35, teacherId: 'TCH-06', room: 'បន្ទប់ Lab 1' }
+            ],
+            teachers: [
+                { id: 'TCH-01', nameKh: 'អ្នកគ្រូ សុខ ម៉ាលី', nameEn: 'Sok Maly', gender: 'ស្រី', phone: '012 456 789', subject: 'ភាសាអង់គ្លេសទូទៅ', levelId: 'LVL-01' },
+                { id: 'TCH-02', nameKh: 'លោកគ្រូ ចាន់ តារា', nameEn: 'Chan Dara', gender: 'ប្រុស', phone: '015 889 234', subject: 'គណិតវិទ្យា និង ភាសាអង់គ្លេស', levelId: 'LVL-02' },
+                { id: 'TCH-03', nameKh: 'អ្នកគ្រូ លី សុភា', nameEn: 'Ly Sophea', gender: 'ស្រី', phone: '077 321 654', subject: 'ភាសាខ្មែរ និង សីលធម៌', levelId: 'LVL-03' },
+                { id: 'TCH-04', nameKh: 'លោកគ្រូ កែវ វិបុល', nameEn: 'Keo Vibol', gender: 'ប្រុស', phone: '096 554 321', subject: 'ភាសាអង់គ្លេសកម្រិតខ្ពស់', levelId: 'LVL-04' },
+                { id: 'TCH-05', nameKh: 'អ្នកគ្រូ ហេង ចន្ធូ', nameEn: 'Heng Chanthou', gender: 'ស្រី', phone: '089 778 990', subject: 'គណិតវិទ្យា', levelId: 'LVL-05' },
+                { id: 'TCH-06', nameKh: 'លោកគ្រូ វណ្ណ សុវណ្ណារិទ្ធ', nameEn: 'Vann Sovannarith', gender: 'ប្រុស', phone: '010 998 877', subject: 'ព័ត៌មានវិទ្យា (IT)', levelId: 'LVL-08' }
+            ],
+            students: [
+                { id: 'NHS-2026-001', nameKh: 'សុខ ចាន់រិទ្ធ', nameEn: 'Sok Chanrith', gender: 'ប្រុស', dob: '2016-05-14', phone: '012 334 455', address: 'ភូមិថ្មី សង្កាត់ស្វាយដង្គំ', levelId: 'LVL-03', status: 'កំពុងសិក្សា', photo: '' },
+                { id: 'NHS-2026-002', nameKh: 'កែវ ស្រីពេជ្រ', nameEn: 'Keo Sreypich', gender: 'ស្រី', dob: '2016-08-22', phone: '017 665 443', address: 'ភូមិវត្តបូព៌ សង្កាត់សាលាកំរើក', levelId: 'LVL-03', status: 'កំពុងសិក្សា', photo: '' },
+                { id: 'NHS-2026-003', nameKh: 'លី វិសាល', nameEn: 'Ly Visal', gender: 'ប្រុស', dob: '2015-02-10', phone: '093 221 100', address: 'ភូមិគ្រួស សង្កាត់ស្វាយដង្គំ', levelId: 'LVL-03', status: 'កំពុងសិក្សា', photo: '' },
+                { id: 'NHS-2026-004', nameKh: 'ចាន់ រតនា', nameEn: 'Chan Leakhena', gender: 'ស្រី', dob: '2017-11-05', phone: '088 776 655', address: 'ភូមិសាលាកន្សែង', levelId: 'LVL-02', status: 'កំពុងសិក្សា', photo: '' },
+                { id: 'NHS-2026-005', nameKh: 'ហេង បញ្ញា', nameEn: 'Heng Panha', gender: 'ប្រុស', dob: '2014-07-19', phone: '015 443 221', address: 'ភូមិតាភុល', levelId: 'LVL-04', status: 'កំពុងសិក្សា', photo: '' },
+                { id: 'NHS-2026-006', nameKh: 'ម៉ៅ សុខា', nameEn: 'Mao Sokha', gender: 'ស្រី', dob: '2012-03-30', phone: '092 887 766', address: 'ភូមិជន្លង់', levelId: 'LVL-08', status: 'កំពុងសិក្សា', photo: '' },
+                { id: 'NHS-2026-007', nameKh: 'ឈុន ពិសិដ្ឋ', nameEn: 'Chhun Piseth', gender: 'ប្រុស', dob: '2016-09-12', phone: '011 223 344', address: 'ភូមិបឹងដូនប៉ា', levelId: 'LVL-03', status: 'កំពុងសិក្សា', photo: '' },
+                { id: 'NHS-2026-008', nameKh: 'នួន ម៉ូនីកា', nameEn: 'Nuon Monika', gender: 'ស្រី', dob: '2019-01-25', phone: '070 556 677', address: 'ភូមិទ្រាំង', levelId: 'LVL-01', status: 'កំពុងសិក្សា', photo: '' }
+            ],
+            attendance: [
+                { id: 'ATT-1', date: new Date().toISOString().split('T')[0], levelId: 'LVL-03', studentId: 'NHS-2026-001', status: 'វត្តមាន', note: '' },
+                { id: 'ATT-2', date: new Date().toISOString().split('T')[0], levelId: 'LVL-03', studentId: 'NHS-2026-002', status: 'វត្តមាន', note: '' },
+                { id: 'ATT-3', date: new Date().toISOString().split('T')[0], levelId: 'LVL-03', studentId: 'NHS-2026-003', status: 'យឺត', note: 'ភ្លៀងខ្លាំង' },
+                { id: 'ATT-4', date: new Date().toISOString().split('T')[0], levelId: 'LVL-03', studentId: 'NHS-2026-007', status: 'ច្បាប់', note: 'ឈឺគ្រុនក្តៅ' }
+            ],
+            payments: [
+                { id: 'INV-2026001', studentId: 'NHS-2026-001', feeType: 'បង់ថ្លៃសិក្សាប្រចាំខែ', amount: 35, currency: 'USD', date: '2026-11-01', status: 'បង់រួច', note: 'ខែវិច្ឆិកា ២០២៦' },
+                { id: 'INV-2026002', studentId: 'NHS-2026-002', feeType: 'បង់ថ្លៃសិក្សាប្រចាំត្រីមាស', amount: 100, currency: 'USD', date: '2026-11-02', status: 'បង់រួច', note: 'បញ្ចុះតម្លៃ ៥$' },
+                { id: 'INV-2026003', studentId: 'NHS-2026-003', feeType: 'បង់ថ្លៃសិក្សាប្រចាំខែ', amount: 35, currency: 'USD', date: '2026-11-05', status: 'ជំពាក់', note: 'សន្យាបង់ថ្ងៃទី ៣០' },
+                { id: 'INV-2026004', studentId: 'NHS-2026-005', feeType: 'ឯកសណ្ឋាន និង សៀវភៅពុម្ព', amount: 25, currency: 'USD', date: '2026-11-10', status: 'បង់រួច', note: 'ឈុតសិស្ស ២ឈុត' }
+            ],
+            scores: [
+                { id: 'SCR-1', studentId: 'NHS-2026-002', levelId: 'LVL-03', month: 'ខែវិច្ឆិកា ២០២៦', english: 96, math: 94, khmer: 92, computer: 95, morality: 98 },
+                { id: 'SCR-2', studentId: 'NHS-2026-001', levelId: 'LVL-03', month: 'ខែវិច្ឆិកា ២០២៦', english: 91, math: 89, khmer: 88, computer: 92, morality: 95 },
+                { id: 'SCR-3', studentId: 'NHS-2026-007', levelId: 'LVL-03', month: 'ខែវិច្ឆិកា ២០២៦', english: 84, math: 82, khmer: 85, computer: 80, morality: 90 },
+                { id: 'SCR-4', studentId: 'NHS-2026-003', levelId: 'LVL-03', month: 'ខែវិច្ឆិកា ២០២៦', english: 76, math: 74, khmer: 79, computer: 78, morality: 85 },
+                { id: 'SCR-5', studentId: 'NHS-2026-004', levelId: 'LVL-02', month: 'ខែវិច្ឆិកា ២០២៦', english: 93, math: 90, khmer: 91, computer: 88, morality: 96 },
+                { id: 'SCR-6', studentId: 'NHS-2026-005', levelId: 'LVL-04', month: 'ខែវិច្ឆិកា ២០២៦', english: 88, math: 92, khmer: 85, computer: 94, morality: 92 }
+            ]
+        };
+
+        let db = loadDatabase();
+        let activeTab = 'dashboard';
+
+        function loadDatabase() {
+            try {
+                const raw = localStorage.getItem(DB_KEY);
+                if (raw) {
+                    return JSON.parse(raw);
+                }
+            } catch (e) {
+                console.error('Error loading DB:', e);
+            }
+            saveDatabase(defaultDatabase);
+            return JSON.parse(JSON.stringify(defaultDatabase));
+        }
+
+        function saveDatabase(data = db) {
+            try {
+                localStorage.setItem(DB_KEY, JSON.stringify(data));
+            } catch (e) {
+                showToast('មានបញ្ហាក្នុងការរក្សាទុកទិន្នន័យ!', 'error');
+            }
+        }
+
+        // =========================================================================
+        // 2. NAVIGATION & UI UTILITIES
+        // =========================================================================
+        const navItems = [
+            { id: 'dashboard', label: 'ផ្ទាំងគ្រប់គ្រង', sub: 'Dashboard', icon: 'fa-chart-pie' },
+            { id: 'students', label: 'ព័ត៌មានសិស្ស', sub: 'Students', icon: 'fa-user-graduate' },
+            { id: 'teachers', label: 'គ្រូបន្ទុកថ្នាក់', sub: 'Teachers', icon: 'fa-chalkboard-user' },
+            { id: 'levels', label: 'កម្រិតសិក្សា', sub: 'Study Levels', icon: 'fa-layer-group' },
+            { id: 'attendance', label: 'វត្តមានសិស្ស', sub: 'Attendance', icon: 'fa-clipboard-user' },
+            { id: 'payments', label: 'បង់លុយ & វិក្កយបត្រ', sub: 'Tuition & Fees', icon: 'fa-hand-holding-dollar' },
+            { id: 'transcripts', label: 'ព្រឹត្តបត្រពិន្ទុ', sub: 'Scores & Transcript', icon: 'fa-file-invoice' },
+            { id: 'honorroll', label: 'តារាងកិត្តិយស', sub: 'Honor Roll', icon: 'fa-trophy' },
+            { id: 'idcard', label: 'កាតសិស្ស', sub: 'Student ID Card', icon: 'fa-id-card' },
+            { id: 'commendation', label: 'លិខិតសរសើរ', sub: 'Commendation', icon: 'fa-award' },
+            { id: 'diploma', label: 'សញ្ញាប័ត្រ', sub: 'Diploma', icon: 'fa-scroll' },
+            { id: 'database', label: 'ប្រព័ន្ធទិន្នន័យ (DB)', sub: 'Backup & Restore', icon: 'fa-database' }
+        ];
+
+        function renderSidebar() {
+            const nav = document.getElementById('nav-menu');
+            nav.innerHTML = navItems.map(item => {
+                const isActive = activeTab === item.id;
+                return `
+                    <button onclick="switchTab('${item.id}')"
+                        class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-left transition-all duration-200 ${
+                            isActive 
+                            ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-bold shadow-lg shadow-amber-500/20' 
+                            : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                        }">
+                        <div class="w-8 h-8 rounded-lg flex items-center justify-center ${isActive ? 'bg-slate-950/15 text-slate-950' : 'bg-white/5 text-amber-400'}">
+                            <i class="fa-solid ${item.icon} text-sm"></i>
+                        </div>
+                        <div class="leading-tight">
+                            <div class="text-sm">${item.label}</div>
+                            <div class="text-[10px] font-inter ${isActive ? 'text-slate-900/80' : 'text-slate-400'}">${item.sub}</div>
+                        </div>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function switchTab(tabId) {
+            activeTab = tabId;
+            const currentNav = navItems.find(n => n.id === tabId);
+            if (currentNav) {
+                document.getElementById('page-title').textContent = currentNav.label;
+            }
+            renderSidebar();
+            renderCurrentView();
+            // Close mobile sidebar if open
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            if (!sidebar.classList.contains('-translate-x-full') && window.innerWidth < 1024) {
+                sidebar.classList.add('-translate-x-full');
+                backdrop.classList.add('hidden');
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const backdrop = document.getElementById('sidebar-backdrop');
+            sidebar.classList.toggle('-translate-x-full');
+            backdrop.classList.toggle('hidden');
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-emerald-600 text-white border-emerald-500',
+                error: 'bg-red-600 text-white border-red-500',
+                info: 'bg-blue-700 text-white border-blue-600'
+            };
+            const icons = {
+                success: 'fa-circle-check',
+                error: 'fa-circle-exclamation',
+                info: 'fa-circle-info'
+            };
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border ${colors[type]} transform transition-all duration-300 translate-x-full`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type]} text-lg"></i><span class="text-sm font-medium">${message}</span>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.remove('translate-x-full'));
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-x-full');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function openConfirmModal(title, message, onConfirm) {
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-message').textContent = message;
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            const yesBtn = document.getElementById('confirm-yes-btn');
+            yesBtn.onclick = () => {
+                onConfirm();
+                closeConfirmModal();
+            };
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('confirm-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function openFormModal(title, htmlContent) {
+            document.getElementById('modal-title').innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-400"></i> <span>${title}</span>`;
+            document.getElementById('modal-body').innerHTML = htmlContent;
+            const modal = document.getElementById('form-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeFormModal() {
+            const modal = document.getElementById('form-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        // Helper Lookups
+        const getLevelName = (id) => {
+            const l = db.levels.find(x => x.id === id);
+            return l ? `${l.nameKh} (${l.nameEn})` : 'មិនទាន់កំណត់';
+        };
+        const getLevelShort = (id) => {
+            const l = db.levels.find(x => x.id === id);
+            return l ? l.nameKh : 'N/A';
+        };
+        const getTeacherName = (id) => {
+            const t = db.teachers.find(x => x.id === id);
+            return t ? t.nameKh : 'មិនទាន់មានគ្រូ';
+        };
+        const getStudent = (id) => db.students.find(x => x.id === id);
+
+        function getStudentAvatar(student, sizeClass = 'w-10 h-10 text-sm') {
+            if (student && student.photo) {
+                return `<img src="${student.photo}" alt="${student.nameKh}" class="${sizeClass} rounded-full object-cover border-2 border-blue-200">`;
+            }
+            const bg = student?.gender === 'ស្រី' ? 'bg-pink-100 text-pink-700 border-pink-200' : 'bg-blue-100 text-blue-700 border-blue-200';
+            const initial = student ? student.nameKh.charAt(0) : '?';
+            return `<div class="${sizeClass} rounded-full ${bg} border flex items-center justify-center font-bold shrink-0">${initial}</div>`;
+        }
+
+        function calculateGradeInfo(avg) {
+            if (avg >= 90) return { grade: 'A', mention: 'ល្អប្រសើរ (Excellent)', color: 'text-emerald-600 bg-emerald-50' };
+            if (avg >= 80) return { grade: 'B', mention: 'ល្អណាស់ (Very Good)', color: 'text-blue-600 bg-blue-50' };
+            if (avg >= 70) return { grade: 'C', mention: 'ល្អ (Good)', color: 'text-indigo-600 bg-indigo-50' };
+            if (avg >= 60) return { grade: 'D', mention: 'ល្អបង្គួរ (Fair)', color: 'text-amber-600 bg-amber-50' };
+            if (avg >= 50) return { grade: 'E', mention: 'មធ្យម (Average)', color: 'text-orange-600 bg-orange-50' };
+            return { grade: 'F', mention: 'ខ្សោយ (Weak)', color: 'text-red-600 bg-red-50' };
+        }
+
+        // =========================================================================
+        // 3. VIEW RENDERERS FOR ALL 12 MODULES
+        // =========================================================================
+        function renderCurrentView() {
+            const container = document.getElementById('app-content');
+            switch (activeTab) {
+                case 'dashboard': renderDashboard(container); break;
+                case 'students': renderStudents(container); break;
+                case 'teachers': renderTeachers(container); break;
+                case 'levels': renderLevels(container); break;
+                case 'attendance': renderAttendance(container); break;
+                case 'payments': renderPayments(container); break;
+                case 'transcripts': renderTranscripts(container); break;
+                case 'honorroll': renderHonorRoll(container); break;
+                case 'idcard': renderIdCard(container); break;
+                case 'commendation': renderCommendation(container); break;
+                case 'diploma': renderDiploma(container); break;
+                case 'database': renderDatabaseManager(container); break;
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 1: DASHBOARD (ផ្ទាំងគ្រប់គ្រង)
+        // -------------------------------------------------------------------------
+        function renderDashboard(container) {
+            const totalStudents = db.students.length;
+            const totalTeachers = db.teachers.length;
+            const totalLevels = db.levels.length;
+            const totalRevenue = db.payments
+                .filter(p => p.status === 'បង់រួច')
+                .reduce((sum, p) => sum + Number(p.amount || 0), 0);
+
+            const today = new Date().toISOString().split('T')[0];
+            const todayAtt = db.attendance.filter(a => a.date === today);
+            const presentCount = todayAtt.filter(a => a.status === 'វត្តមាន' || a.status === 'យឺត').length;
+            const attRate = todayAtt.length > 0 ? Math.round((presentCount / todayAtt.length) * 100) : 100;
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Welcome Banner -->
+                    <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 rounded-2xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="inline-block px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold mb-3">
+                                ប្រព័ន្ធគ្រប់គ្រងសាលារៀនទំនើប
+                            </span>
+                            <h1 class="font-moul text-xl sm:text-2xl text-amber-400 leading-relaxed">សាលាញូហូព NEW HOPE SCHOOL</h1>
+                            <p class="text-blue-100 text-sm mt-2 leading-relaxed">
+                                សូមស្វាគមន៍មកកាន់ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យសិស្ស គ្រូបង្រៀន វត្តមាន ការបង់ប្រាក់ ព្រឹត្តបត្រពិន្ទុ និងលិខិតបញ្ជាក់ផ្សេងៗ។
+                            </p>
+                            <div class="flex flex-wrap gap-3 mt-5">
+                                <button onclick="switchTab('students'); setTimeout(openStudentModal, 100);" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-lg transition flex items-center gap-2">
+                                    <i class="fa-solid fa-user-plus"></i> ចុះឈ្មោះសិស្សថ្មី
+                                </button>
+                                <button onclick="switchTab('attendance')" class="px-4 py-2.5 rounded-xl bg-white/15 hover:bg-white/25 text-white font-medium text-sm backdrop-blur-sm transition flex items-center gap-2">
+                                    <i class="fa-solid fa-clipboard-check"></i> ស្រង់វត្តមានថ្ងៃនេះ
+                                </button>
+                            </div>
+                        </div>
+                        <i class="fa-solid fa-school absolute -right-6 -bottom-8 text-[180px] text-white/5 pointer-events-none"></i>
+                    </div>
+
+                    <!-- KPI Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-500 uppercase">សិស្សសរុប (Students)</p>
+                                    <h3 class="text-3xl font-extrabold text-slate-800 mt-1">${totalStudents} <span class="text-sm font-normal text-slate-500">នាក់</span></h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-user-graduate"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-xs text-emerald-600 font-medium flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> កំពុងសិក្សាសកម្ម
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-500 uppercase">គ្រូបង្រៀន (Teachers)</p>
+                                    <h3 class="text-3xl font-extrabold text-slate-800 mt-1">${totalTeachers} <span class="text-sm font-normal text-slate-500">នាក់</span></h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-chalkboard-user"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-xs text-slate-500 font-medium">
+                                គ្របដណ្តប់លើ ${totalLevels} កម្រិតសិក្សា
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-500 uppercase">អត្រាវត្តមានថ្ងៃនេះ</p>
+                                    <h3 class="text-3xl font-extrabold text-emerald-600 mt-1">${attRate}%</h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-user-check"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-xs text-slate-500 font-medium">
+                                បានស្រង់វត្តមាន ${todayAtt.length} នាក់ថ្ងៃនេះ
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-500 uppercase">ចំណូលបង់ថ្លៃសិក្សា</p>
+                                    <h3 class="text-3xl font-extrabold text-indigo-700 mt-1">$${totalRevenue.toLocaleString()}</h3>
+                                </div>
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-sack-dollar"></i>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-xs text-indigo-600 font-medium">
+                                វិក្កយបត្របង់រួចសរុប ${db.payments.filter(p => p.status === 'បង់រួច').length} ច្បាប់
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Shortcuts Grid -->
+                    <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-amber-500"></i> ផ្លូវកាត់មុខងារសំខាន់ៗ (Quick Access)
+                        </h3>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                            ${[
+                                { tab: 'idcard', title: 'ធ្វើកាតសិស្ស', icon: 'fa-id-card', color: 'bg-blue-50 text-blue-700 border-blue-100' },
+                                { tab: 'transcripts', title: 'ព្រឹត្តបត្រពិន្ទុ', icon: 'fa-file-invoice', color: 'bg-indigo-50 text-indigo-700 border-indigo-100' },
+                                { tab: 'honorroll', title: 'តារាងកិត្តិយស', icon: 'fa-trophy', color: 'bg-amber-50 text-amber-700 border-amber-100' },
+                                { tab: 'commendation', title: 'លិខិតសរសើរ', icon: 'fa-award', color: 'bg-emerald-50 text-emerald-700 border-emerald-100' },
+                                { tab: 'diploma', title: 'សញ្ញាប័ត្រ', icon: 'fa-scroll', color: 'bg-purple-50 text-purple-700 border-purple-100' },
+                                { tab: 'payments', title: 'បង់ប្រាក់សិក្សា', icon: 'fa-receipt', color: 'bg-rose-50 text-rose-700 border-rose-100' }
+                            ].map(q => `
+                                <button onclick="switchTab('${q.tab}')" class="p-4 rounded-xl border ${q.color} hover:scale-[1.02] transition flex flex-col items-center text-center gap-2">
+                                    <i class="fa-solid ${q.icon} text-2xl"></i>
+                                    <span class="text-xs font-bold">${q.title}</span>
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Recent Students & Payments -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-bold text-slate-800">សិស្សចុះឈ្មោះថ្មីៗ</h3>
+                                <button onclick="switchTab('students')" class="text-xs text-blue-600 font-bold hover:underline">មើលទាំងអស់ &rarr;</button>
+                            </div>
+                            <div class="space-y-3">
+                                ${db.students.slice(-4).reverse().map(s => `
+                                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                        <div class="flex items-center gap-3">
+                                            ${getStudentAvatar(s)}
+                                            <div>
+                                                <div class="font-bold text-sm text-slate-800">${s.nameKh}</div>
+                                                <div class="text-xs text-slate-500">${s.id} • ${getLevelShort(s.levelId)}</div>
+                                            </div>
+                                        </div>
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">${s.status}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-sm">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="font-bold text-slate-800">ប្រតិបត្តិការបង់ប្រាក់ថ្មីៗ</h3>
+                                <button onclick="switchTab('payments')" class="text-xs text-blue-600 font-bold hover:underline">មើលទាំងអស់ &rarr;</button>
+                            </div>
+                            <div class="space-y-3">
+                                ${db.payments.slice(-4).reverse().map(p => {
+                                    const st = getStudent(p.studentId);
+                                    return `
+                                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+                                        <div>
+                                            <div class="font-bold text-sm text-slate-800">${st ? st.nameKh : p.studentId}</div>
+                                            <div class="text-xs text-slate-500">${p.feeType} (${p.date})</div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="font-bold text-sm text-blue-900">$${p.amount}</div>
+                                            <span class="text-[11px] px-2 py-0.5 rounded-full ${p.status === 'បង់រួច' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${p.status}</span>
+                                        </div>
+                                    </div>
+                                `}).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 2: STUDENT INFORMATION (ព័ត៌មានសិស្ស - Full CRUD)
+        // -------------------------------------------------------------------------
+        let studentSearch = '';
+        let studentFilterLevel = 'ALL';
+
+        function renderStudents(container) {
+            const filtered = db.students.filter(s => {
+                const matchSearch = s.nameKh.toLowerCase().includes(studentSearch.toLowerCase()) ||
+                                    s.nameEn.toLowerCase().includes(studentSearch.toLowerCase()) ||
+                                    s.id.toLowerCase().includes(studentSearch.toLowerCase());
+                const matchLevel = studentFilterLevel === 'ALL' || s.levelId === studentFilterLevel;
+                return matchSearch && matchLevel;
+            });
+
+            container.innerHTML = `
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <!-- Toolbar -->
+                    <div class="p-5 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/50">
+                        <div class="flex flex-col sm:flex-row gap-3 flex-1">
+                            <div class="relative flex-1 max-w-md">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input type="text" value="${studentSearch}" oninput="studentSearch = this.value; renderStudents(document.getElementById('app-content'))"
+                                    placeholder="ស្វែងរកតាមឈ្មោះ ឬ អត្តលេខសិស្ស..."
+                                    class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                            </div>
+                            <select onchange="studentFilterLevel = this.value; renderStudents(document.getElementById('app-content'))"
+                                class="px-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="ALL">គ្រប់កម្រិតសិក្សាទាំងអស់</option>
+                                ${db.levels.map(l => `<option value="${l.id}" ${studentFilterLevel === l.id ? 'selected' : ''}>${l.nameKh}</option>`).join('')}
+                            </select>
+                        </div>
+                        <button onclick="openStudentModal()" class="px-5 py-2.5 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold shadow-md shadow-blue-800/20 transition flex items-center justify-center gap-2 shrink-0">
+                            <i class="fa-solid fa-plus"></i> បញ្ចូលសិស្សថ្មី (Insert)
+                        </button>
+                    </div>
+
+                    <!-- Responsive Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100/80 text-slate-600 text-xs uppercase border-b border-slate-200">
+                                    <th class="py-3.5 px-4">អត្តលេខ</th>
+                                    <th class="py-3.5 px-4">សិស្ស (ខ្មែរ / អង់គ្លេស)</th>
+                                    <th class="py-3.5 px-4">ភេទ</th>
+                                    <th class="py-3.5 px-4">ថ្ងៃខែឆ្នាំកំណើត</th>
+                                    <th class="py-3.5 px-4">កម្រិតសិក្សា</th>
+                                    <th class="py-3.5 px-4">លេខទូរស័ព្ទអាណាព្យាបាល</th>
+                                    <th class="py-3.5 px-4">ស្ថានភាព</th>
+                                    <th class="py-3.5 px-4 text-right">សកម្មភាព</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-sm">
+                                ${filtered.length === 0 ? `
+                                    <tr><td colspan="8" class="py-10 text-center text-slate-400">មិនមានទិន្នន័យសិស្សត្រូវនឹងការស្វែងរកទេ</td></tr>
+                                ` : filtered.map(s => `
+                                    <tr class="hover:bg-blue-50/40 transition">
+                                        <td class="py-3 px-4 font-inter font-semibold text-blue-900">${s.id}</td>
+                                        <td class="py-3 px-4">
+                                            <div class="flex items-center gap-3">
+                                                ${getStudentAvatar(s)}
+                                                <div>
+                                                    <div class="font-bold text-slate-800">${s.nameKh}</div>
+                                                    <div class="text-xs font-inter text-slate-500">${s.nameEn}</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="py-3 px-4">${s.gender}</td>
+                                        <td class="py-3 px-4 font-inter text-slate-600">${s.dob}</td>
+                                        <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-800 text-xs font-bold">${getLevelShort(s.levelId)}</span></td>
+                                        <td class="py-3 px-4 font-inter text-slate-600">${s.phone}</td>
+                                        <td class="py-3 px-4">
+                                            <span class="px-2.5 py-1 rounded-full text-xs font-medium ${s.status === 'កំពុងសិក្សា' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-700'}">${s.status}</span>
+                                        </td>
+                                        <td class="py-3 px-4 text-right whitespace-nowrap">
+                                            <button onclick="openStudentModal('${s.id}')" class="p-2 rounded-lg text-amber-600 hover:bg-amber-50 transition" title="កែប្រែ (Edit)">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <button onclick="deleteStudent('${s.id}')" class="p-2 rounded-lg text-red-600 hover:bg-red-50 transition" title="លុប (Delete)">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openStudentModal(editId = null) {
+            const student = editId ? db.students.find(s => s.id === editId) : null;
+            const nextId = `NHS-2026-${String(db.students.length + 1).padStart(3, '0')}`;
+
+            openFormModal(student ? 'កែប្រែព័ត៌មានសិស្ស (Edit & Update)' : 'ចុះឈ្មោះសិស្សថ្មី (Insert Student)', `
+                <form onsubmit="saveStudentForm(event, '${editId || ''}')" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">អត្តលេខសិស្ស (Student ID) *</label>
+                            <input type="text" name="id" required value="${student ? student.id : nextId}" ${student ? 'readonly class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 text-sm font-inter"' : 'class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter"'}>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">កម្រិតសិក្សា (Level/Class) *</label>
+                            <select name="levelId" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.levels.map(l => `<option value="${l.id}" ${student?.levelId === l.id ? 'selected' : ''}>${l.nameKh} (${l.nameEn})</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">គោត្តនាម និង នាម (ខ្មែរ) *</label>
+                            <input type="text" name="nameKh" required value="${student ? student.nameKh : ''}" placeholder="ឧ. សុខ ចាន់រិទ្ធ" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះឡាតាំង (English Name) *</label>
+                            <input type="text" name="nameEn" required value="${student ? student.nameEn : ''}" placeholder="e.g. Sok Chanrith" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ភេទ (Gender)</label>
+                            <select name="gender" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                <option value="ប្រុស" ${student?.gender === 'ប្រុស' ? 'selected' : ''}>ប្រុស (Male)</option>
+                                <option value="ស្រី" ${student?.gender === 'ស្រី' ? 'selected' : ''}>ស្រី (Female)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ថ្ងៃខែឆ្នាំកំណើត (DOB)</label>
+                            <input type="date" name="dob" required value="${student ? student.dob : '2016-01-01'}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">លេខទូរស័ព្ទអាណាព្យាបាល</label>
+                            <input type="text" name="phone" required value="${student ? student.phone : ''}" placeholder="012 345 678" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ស្ថានភាពសិក្សា</label>
+                            <select name="status" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                <option value="កំពុងសិក្សា" ${student?.status === 'កំពុងសិក្សា' ? 'selected' : ''}>កំពុងសិក្សា</option>
+                                <option value="បានបញ្ចប់ការសិក្សា" ${student?.status === 'បានបញ្ចប់ការសិក្សា' ? 'selected' : ''}>បានបញ្ចប់ការសិក្សា</option>
+                                <option value="ផ្អាកការសិក្សា" ${student?.status === 'ផ្អាកការសិក្សា' ? 'selected' : ''}>ផ្អាកការសិក្សា</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">អាសយដ្ឋានបច្ចុប្បន្ន</label>
+                        <input type="text" name="address" value="${student ? student.address : ''}" placeholder="ភូមិ ឃុំ/សង្កាត់ ក្រុង/ស្រុក..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">រូបថតសិស្ស (ជ្រើសរើសរូបភាព ប្រសិនបើមាន)</label>
+                        <input type="file" id="student-photo-input" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                        <button type="button" onclick="closeFormModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-sm font-medium">បោះបង់</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold shadow-md">
+                            ${student ? 'ធ្វើបច្ចុប្បន្នភាព (Update)' : 'រក្សាទុកទិន្នន័យ (Insert)'}
+                        </button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function saveStudentForm(e, editId) {
+            e.preventDefault();
+            const form = e.target;
+            const fileInput = document.getElementById('student-photo-input');
+            const existingStudent = editId ? db.students.find(s => s.id === editId) : null;
+
+            const finalizeSave = (photoData) => {
+                const record = {
+                    id: form.id.value.trim(),
+                    nameKh: form.nameKh.value.trim(),
+                    nameEn: form.nameEn.value.trim(),
+                    gender: form.gender.value,
+                    dob: form.dob.value,
+                    phone: form.phone.value.trim(),
+                    address: form.address.value.trim(),
+                    levelId: form.levelId.value,
+                    status: form.status.value,
+                    photo: photoData !== undefined ? photoData : (existingStudent ? existingStudent.photo : '')
+                };
+
+                if (editId) {
+                    const idx = db.students.findIndex(s => s.id === editId);
+                    if (idx !== -1) db.students[idx] = record;
+                    showToast('បានធ្វើបច្ចុប្បន្នភាពព័ត៌មានសិស្សដោយជោគជ័យ!');
+                } else {
+                    if (db.students.some(s => s.id === record.id)) {
+                        showToast('អត្តលេខសិស្សនេះមានរួចហើយ!', 'error');
+                        return;
+                    }
+                    db.students.push(record);
+                    showToast('បានបញ្ចូលសិស្សថ្មីទៅក្នុង Database ដោយជោគជ័យ!');
+                }
+                saveDatabase();
+                closeFormModal();
+                renderStudents(document.getElementById('app-content'));
+            };
+
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (ev) => finalizeSave(ev.target.result);
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                finalizeSave(undefined);
+            }
+        }
+
+        function deleteStudent(id) {
+            openConfirmModal('លុបទិន្នន័យសិស្ស', `តើអ្នកពិតជាចង់លុបសិស្សអត្តលេខ ${id} មែនទេ?`, () => {
+                db.students = db.students.filter(s => s.id !== id);
+                saveDatabase();
+                showToast('បានលុបទិន្នន័យសិស្សរួចរាល់!');
+                renderStudents(document.getElementById('app-content'));
+            });
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 3: HOMEROOM TEACHERS (គ្រូបន្ទុកថ្នាក់ - Full CRUD)
+        // -------------------------------------------------------------------------
+        function renderTeachers(container) {
+            container.innerHTML = `
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+                        <div>
+                            <h3 class="font-bold text-slate-800">បញ្ជីរាយនាមគ្រូបន្ទុកថ្នាក់ (Homeroom Teachers)</h3>
+                            <p class="text-xs text-slate-500">សរុបគ្រូបង្រៀនទាំងអស់ ${db.teachers.length} នាក់</p>
+                        </div>
+                        <button onclick="openTeacherModal()" class="px-5 py-2.5 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold shadow-md transition flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> បន្ថែមគ្រូថ្មី
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100/80 text-slate-600 text-xs uppercase border-b border-slate-200">
+                                    <th class="py-3.5 px-4">អត្តលេខគ្រូ</th>
+                                    <th class="py-3.5 px-4">គោត្តនាម និង នាម</th>
+                                    <th class="py-3.5 px-4">ភេទ</th>
+                                    <th class="py-3.5 px-4">ឯកទេសបង្រៀន</th>
+                                    <th class="py-3.5 px-4">ទទួលបន្ទុកថ្នាក់</th>
+                                    <th class="py-3.5 px-4">លេខទូរស័ព្ទ</th>
+                                    <th class="py-3.5 px-4 text-right">សកម្មភាព</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-sm">
+                                ${db.teachers.map(t => `
+                                    <tr class="hover:bg-blue-50/40 transition">
+                                        <td class="py-3 px-4 font-inter font-semibold text-blue-900">${t.id}</td>
+                                        <td class="py-3 px-4">
+                                            <div class="font-bold text-slate-800">${t.nameKh}</div>
+                                            <div class="text-xs font-inter text-slate-500">${t.nameEn}</div>
+                                        </td>
+                                        <td class="py-3 px-4">${t.gender}</td>
+                                        <td class="py-3 px-4 text-slate-700">${t.subject}</td>
+                                        <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-lg bg-amber-50 text-amber-800 border border-amber-200 text-xs font-bold">${getLevelShort(t.levelId)}</span></td>
+                                        <td class="py-3 px-4 font-inter text-slate-600">${t.phone}</td>
+                                        <td class="py-3 px-4 text-right whitespace-nowrap">
+                                            <button onclick="openTeacherModal('${t.id}')" class="p-2 rounded-lg text-amber-600 hover:bg-amber-50 transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                                            <button onclick="deleteTeacher('${t.id}')" class="p-2 rounded-lg text-red-600 hover:bg-red-50 transition"><i class="fa-solid fa-trash-can"></i></button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }
+
+        function openTeacherModal(editId = null) {
+            const teacher = editId ? db.teachers.find(t => t.id === editId) : null;
+            const nextId = `TCH-${String(db.teachers.length + 1).padStart(2, '0')}`;
+            openFormModal(teacher ? 'កែប្រែព័ត៌មានគ្រូបន្ទុកថ្នាក់' : 'បន្ថែមគ្រូបន្ទុកថ្នាក់ថ្មី', `
+                <form onsubmit="saveTeacherForm(event, '${editId || ''}')" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">អត្តលេខគ្រូ *</label>
+                            <input type="text" name="id" required value="${teacher ? teacher.id : nextId}" ${teacher ? 'readonly class="w-full px-3.5 py-2.5 rounded-xl border bg-slate-100 text-sm font-inter"' : 'class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter"'}>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ភេទ</label>
+                            <select name="gender" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                <option value="ប្រុស" ${teacher?.gender === 'ប្រុស' ? 'selected' : ''}>ប្រុស</option>
+                                <option value="ស្រី" ${teacher?.gender === 'ស្រី' ? 'selected' : ''}>ស្រី</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះគ្រូ (ខ្មែរ) *</label>
+                            <input type="text" name="nameKh" required value="${teacher ? teacher.nameKh : ''}" placeholder="ឧ. លោកគ្រូ ចាន់ តារា" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះឡាតាំង (English) *</label>
+                            <input type="text" name="nameEn" required value="${teacher ? teacher.nameEn : ''}" placeholder="e.g. Chan Dara" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ឯកទេសបង្រៀន *</label>
+                            <input type="text" name="subject" required value="${teacher ? teacher.subject : ''}" placeholder="ឧ. ភាសាអង់គ្លេស" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ទទួលបន្ទុកកម្រិតសិក្សា</label>
+                            <select name="levelId" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.levels.map(l => `<option value="${l.id}" ${teacher?.levelId === l.id ? 'selected' : ''}>${l.nameKh}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">លេខទូរស័ព្ទទំនាក់ទំនង *</label>
+                            <input type="text" name="phone" required value="${teacher ? teacher.phone : ''}" placeholder="012 345 678" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                        <button type="button" onclick="closeFormModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-sm">បោះបង់</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-800 text-white text-sm font-bold shadow-md">
+                            ${teacher ? 'ធ្វើបច្ចុប្បន្នភាព (Update)' : 'រក្សាទុក (Insert)'}
+                        </button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function saveTeacherForm(e, editId) {
+            e.preventDefault();
+            const f = e.target;
+            const record = {
+                id: f.id.value.trim(),
+                nameKh: f.nameKh.value.trim(),
+                nameEn: f.nameEn.value.trim(),
+                gender: f.gender.value,
+                subject: f.subject.value.trim(),
+                levelId: f.levelId.value,
+                phone: f.phone.value.trim()
+            };
+            if (editId) {
+                const idx = db.teachers.findIndex(t => t.id === editId);
+                if (idx !== -1) db.teachers[idx] = record;
+                showToast('បានធ្វើបច្ចុប្បន្នភាពព័ត៌មានគ្រូរួចរាល់!');
+            } else {
+                db.teachers.push(record);
+                showToast('បានបន្ថែមគ្រូបន្ទុកថ្នាក់ថ្មីដោយជោគជ័យ!');
+            }
+            saveDatabase();
+            closeFormModal();
+            renderTeachers(document.getElementById('app-content'));
+        }
+
+        function deleteTeacher(id) {
+            openConfirmModal('លុបទិន្នន័យគ្រូ', 'តើអ្នកពិតជាចង់លុបឈ្មោះគ្រូនេះមែនទេ?', () => {
+                db.teachers = db.teachers.filter(t => t.id !== id);
+                saveDatabase();
+                showToast('បានលុបទិន្នន័យគ្រូរួចរាល់!');
+                renderTeachers(document.getElementById('app-content'));
+            });
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 4: STUDY LEVELS (កម្រិតសិក្សា - Full CRUD)
+        // -------------------------------------------------------------------------
+        function renderLevels(container) {
+            container.innerHTML = `
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+                        <div>
+                            <h3 class="font-bold text-slate-800">កម្រិតសិក្សា និង ថ្នាក់រៀន (Study Levels & Tuition Rates)</h3>
+                            <p class="text-xs text-slate-500">គ្រប់គ្រងកម្រិតសិក្សា បន្ទប់រៀន និងតម្លៃសិក្សាប្រចាំខែ</p>
+                        </div>
+                        <button onclick="openLevelModal()" class="px-5 py-2.5 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> បង្កើតកម្រិតថ្មី
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        ${db.levels.map(l => {
+                            const studentCount = db.students.filter(s => s.levelId === l.id).length;
+                            return `
+                                <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                                    <div>
+                                        <div class="flex items-center justify-between mb-3">
+                                            <span class="px-2.5 py-1 rounded-lg bg-blue-900 text-amber-400 font-inter text-xs font-bold">${l.id}</span>
+                                            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">$${l.fee}/ខែ</span>
+                                        </div>
+                                        <h4 class="font-bold text-lg text-slate-800">${l.nameKh}</h4>
+                                        <p class="text-xs font-inter text-slate-500 mb-4">${l.nameEn}</p>
+                                        <div class="space-y-1.5 text-xs text-slate-600 border-t border-slate-100 pt-3">
+                                            <div class="flex justify-between"><span>បន្ទប់រៀន:</span> <span class="font-bold">${l.room}</span></div>
+                                            <div class="flex justify-between"><span>គ្រូបន្ទុកថ្នាក់:</span> <span class="font-bold text-blue-800">${getTeacherName(l.teacherId)}</span></div>
+                                            <div class="flex justify-between"><span>ចំនួនសិស្ស:</span> <span class="font-bold">${studentCount} នាក់</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-slate-100">
+                                        <button onclick="openLevelModal('${l.id}')" class="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 hover:bg-amber-100 text-xs font-bold">កែប្រែ</button>
+                                        <button onclick="deleteLevel('${l.id}')" class="px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 text-xs font-bold">លុប</button>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function openLevelModal(editId = null) {
+            const level = editId ? db.levels.find(l => l.id === editId) : null;
+            const nextId = `LVL-${String(db.levels.length + 1).padStart(2, '0')}`;
+            openFormModal(level ? 'កែប្រែកម្រិតសិក្សា' : 'បន្ថែមកម្រិតសិក្សាថ្មី', `
+                <form onsubmit="saveLevelForm(event, '${editId || ''}')" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">កូដកម្រិត (Level ID)</label>
+                            <input type="text" name="id" required value="${level ? level.id : nextId}" ${level ? 'readonly class="w-full px-3.5 py-2.5 rounded-xl border bg-slate-100 text-sm font-inter"' : 'class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter"'}>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">តម្លៃសិក្សាប្រចាំខែ (USD $) *</label>
+                            <input type="number" name="fee" required value="${level ? level.fee : 35}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះកម្រិតសិក្សា (ខ្មែរ) *</label>
+                            <input type="text" name="nameKh" required value="${level ? level.nameKh : ''}" placeholder="ឧ. កម្រិត ៧" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះកម្រិត (English) *</label>
+                            <input type="text" name="nameEn" required value="${level ? level.nameEn : ''}" placeholder="e.g. Level 7" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">បន្ទប់រៀន</label>
+                            <input type="text" name="room" required value="${level ? level.room : 'បន្ទប់ E1'}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">គ្រូបន្ទុកថ្នាក់</label>
+                            <select name="teacherId" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.teachers.map(t => `<option value="${t.id}" ${level?.teacherId === t.id ? 'selected' : ''}>${t.nameKh}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                        <button type="button" onclick="closeFormModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-sm">បោះបង់</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-800 text-white text-sm font-bold">រក្សាទុក</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function saveLevelForm(e, editId) {
+            e.preventDefault();
+            const f = e.target;
+            const record = {
+                id: f.id.value.trim(),
+                nameKh: f.nameKh.value.trim(),
+                nameEn: f.nameEn.value.trim(),
+                fee: Number(f.fee.value),
+                room: f.room.value.trim(),
+                teacherId: f.teacherId.value
+            };
+            if (editId) {
+                const idx = db.levels.findIndex(l => l.id === editId);
+                if (idx !== -1) db.levels[idx] = record;
+                showToast('បានធ្វើបច្ចុប្បន្នភាពកម្រិតសិក្សា!');
+            } else {
+                db.levels.push(record);
+                showToast('បានបន្ថែមកម្រិតសិក្សាថ្មី!');
+            }
+            saveDatabase();
+            closeFormModal();
+            renderLevels(document.getElementById('app-content'));
+        }
+
+        function deleteLevel(id) {
+            openConfirmModal('លុបកម្រិតសិក្សា', 'តើអ្នកពិតជាចង់លុបកម្រិតសិក្សានេះមែនទេ?', () => {
+                db.levels = db.levels.filter(l => l.id !== id);
+                saveDatabase();
+                showToast('បានលុបកម្រិតសិក្សារួចរាល់!');
+                renderLevels(document.getElementById('app-content'));
+            });
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 5: ATTENDANCE (វត្តមានសិស្ស)
+        // -------------------------------------------------------------------------
+        let attSelectedDate = new Date().toISOString().split('T')[0];
+        let attSelectedLevel = 'LVL-03';
+
+        function renderAttendance(container) {
+            const classStudents = db.students.filter(s => s.levelId === attSelectedLevel);
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Filter Controls -->
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">កាលបរិច្ឆេទ (Date)</label>
+                                <input type="date" value="${attSelectedDate}" onchange="attSelectedDate = this.value; renderAttendance(document.getElementById('app-content'))"
+                                    class="px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">ជ្រើសរើសកម្រិតសិក្សា (Class)</label>
+                                <select onchange="attSelectedLevel = this.value; renderAttendance(document.getElementById('app-content'))"
+                                    class="px-4 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                    ${db.levels.map(l => `<option value="${l.id}" ${attSelectedLevel === l.id ? 'selected' : ''}>${l.nameKh} (${l.nameEn})</option>`).join('')}
+                                </select>
+                            </div>
+                        </div>
+                        <button onclick="saveBulkAttendance()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-floppy-disk"></i> រក្សាទុកវត្តមាន (Save Attendance)
+                        </button>
+                    </div>
+
+                    <!-- Attendance Sheet -->
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-4 bg-blue-950 text-white flex items-center justify-between">
+                            <span class="font-bold text-sm">បញ្ជីស្រង់វត្តមាន៖ ${getLevelName(attSelectedLevel)}</span>
+                            <span class="text-xs text-amber-400 font-inter">Date: ${attSelectedDate}</span>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+                                        <th class="py-3.5 px-4">អត្តលេខ</th>
+                                        <th class="py-3.5 px-4">ឈ្មោះសិស្ស</th>
+                                        <th class="py-3.5 px-4">ស្ថានភាពវត្តមាន (Status)</th>
+                                        <th class="py-3.5 px-4">កំណត់សម្គាល់ (Note)</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-sm" id="attendance-rows">
+                                    ${classStudents.length === 0 ? `
+                                        <tr><td colspan="4" class="py-10 text-center text-slate-400">មិនមានសិស្សក្នុងថ្នាក់នេះទេ</td></tr>
+                                    ` : classStudents.map(s => {
+                                        const existing = db.attendance.find(a => a.date === attSelectedDate && a.studentId === s.id);
+                                        const currentStatus = existing ? existing.status : 'វត្តមាន';
+                                        const currentNote = existing ? existing.note : '';
+                                        return `
+                                            <tr class="hover:bg-slate-50" data-student-id="${s.id}">
+                                                <td class="py-3 px-4 font-inter font-semibold text-blue-900">${s.id}</td>
+                                                <td class="py-3 px-4">
+                                                    <div class="flex items-center gap-2.5">
+                                                        ${getStudentAvatar(s, 'w-8 h-8 text-xs')}
+                                                        <div>
+                                                            <div class="font-bold text-slate-800">${s.nameKh}</div>
+                                                            <div class="text-xs text-slate-400">${s.gender}</div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-4">
+                                                    <div class="flex flex-wrap gap-2">
+                                                        ${['វត្តមាន', 'អវត្តមាន', 'ច្បាប់', 'យឺត'].map(st => {
+                                                            const colors = {
+                                                                'វត្តមាន': 'peer-checked:bg-emerald-600 peer-checked:text-white peer-checked:border-emerald-600',
+                                                                'អវត្តមាន': 'peer-checked:bg-red-600 peer-checked:text-white peer-checked:border-red-600',
+                                                                'ច្បាប់': 'peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-500',
+                                                                'យឺត': 'peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-600'
+                                                            };
+                                                            return `
+                                                                <label class="cursor-pointer">
+                                                                    <input type="radio" name="att_${s.id}" value="${st}" ${currentStatus === st ? 'checked' : ''} class="sr-only peer">
+                                                                    <span class="inline-block px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-600 transition ${colors[st]}">
+                                                                        ${st}
+                                                                    </span>
+                                                                </label>
+                                                            `;
+                                                        }).join('')}
+                                                    </div>
+                                                </td>
+                                                <td class="py-3 px-4">
+                                                    <input type="text" name="note_${s.id}" value="${currentNote}" placeholder="មូលហេតុ..." class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs">
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function saveBulkAttendance() {
+            const rows = document.querySelectorAll('#attendance-rows tr[data-student-id]');
+            if (rows.length === 0) return;
+
+            rows.forEach(row => {
+                const studentId = row.getAttribute('data-student-id');
+                const statusEl = row.querySelector(`input[name="att_${studentId}"]:checked`);
+                const noteEl = row.querySelector(`input[name="note_${studentId}"]`);
+                const status = statusEl ? statusEl.value : 'វត្តមាន';
+                const note = noteEl ? noteEl.value.trim() : '';
+
+                const idx = db.attendance.findIndex(a => a.date === attSelectedDate && a.studentId === studentId);
+                if (idx !== -1) {
+                    db.attendance[idx] = { ...db.attendance[idx], status, note };
+                } else {
+                    db.attendance.push({
+                        id: 'ATT-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
+                        date: attSelectedDate,
+                        levelId: attSelectedLevel,
+                        studentId,
+                        status,
+                        note
+                    });
+                }
+            });
+            saveDatabase();
+            showToast(`បានរក្សាទុកវត្តមានសម្រាប់ថ្ងៃទី ${attSelectedDate} រួចរាល់!`);
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 6: TUITION & PAYMENTS (បង់លុយ & វិក្កយបត្រ)
+        // -------------------------------------------------------------------------
+        function renderPayments(container) {
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50">
+                            <div>
+                                <h3 class="font-bold text-slate-800">ការគ្រប់គ្រងការបង់ថ្លៃសិក្សា (Tuition & Fee Payments)</h3>
+                                <p class="text-xs text-slate-500">កត់ត្រាការបង់ប្រាក់ កែប្រែ និងបោះពុម្ពវិក្កយបត្រផ្លូវការ</p>
+                            </div>
+                            <button onclick="openPaymentModal()" class="px-5 py-2.5 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold shadow-md flex items-center gap-2">
+                                <i class="fa-solid fa-plus"></i> កត់ត្រាការបង់ប្រាក់ថ្មី
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100/80 text-slate-600 text-xs uppercase border-b border-slate-200">
+                                        <th class="py-3.5 px-4">លេខវិក្កយបត្រ</th>
+                                        <th class="py-3.5 px-4">ឈ្មោះសិស្ស</th>
+                                        <th class="py-3.5 px-4">ប្រភេទនៃការបង់ប្រាក់</th>
+                                        <th class="py-3.5 px-4">ទឹកប្រាក់</th>
+                                        <th class="py-3.5 px-4">កាលបរិច្ឆេទ</th>
+                                        <th class="py-3.5 px-4">ស្ថានភាព</th>
+                                        <th class="py-3.5 px-4 text-right">សកម្មភាព</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 text-sm">
+                                    ${db.payments.slice().reverse().map(p => {
+                                        const st = getStudent(p.studentId);
+                                        return `
+                                            <tr class="hover:bg-blue-50/40 transition">
+                                                <td class="py-3 px-4 font-inter font-bold text-blue-900">${p.id}</td>
+                                                <td class="py-3 px-4">
+                                                    <div class="font-bold text-slate-800">${st ? st.nameKh : p.studentId}</div>
+                                                    <div class="text-xs text-slate-500">${st ? getLevelShort(st.levelId) : ''}</div>
+                                                </td>
+                                                <td class="py-3 px-4">${p.feeType}</td>
+                                                <td class="py-3 px-4 font-inter font-bold text-emerald-700">$${p.amount}</td>
+                                                <td class="py-3 px-4 font-inter text-slate-600">${p.date}</td>
+                                                <td class="py-3 px-4">
+                                                    <span class="px-2.5 py-1 rounded-full text-xs font-bold ${p.status === 'បង់រួច' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">${p.status}</span>
+                                                </td>
+                                                <td class="py-3 px-4 text-right whitespace-nowrap">
+                                                    <button onclick="viewReceipt('${p.id}')" class="px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs font-bold mr-1" title="មើលវិក្កយបត្រ">
+                                                        <i class="fa-solid fa-print"></i> វិក្កយបត្រ
+                                                    </button>
+                                                    <button onclick="openPaymentModal('${p.id}')" class="p-2 rounded-lg text-amber-600 hover:bg-amber-50"><i class="fa-solid fa-pen-to-square"></i></button>
+                                                    <button onclick="deletePayment('${p.id}')" class="p-2 rounded-lg text-red-600 hover:bg-red-50"><i class="fa-solid fa-trash-can"></i></button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Receipt Preview Container -->
+                    <div id="receipt-preview-box"></div>
+                </div>
+            `;
+        }
+
+        function openPaymentModal(editId = null) {
+            const pay = editId ? db.payments.find(p => p.id === editId) : null;
+            const nextInv = `INV-2026${String(db.payments.length + 1).padStart(3, '0')}`;
+
+            openFormModal(pay ? 'កែប្រែការបង់ប្រាក់' : 'កត់ត្រាការបង់ប្រាក់ថ្មី', `
+                <form onsubmit="savePaymentForm(event, '${editId || ''}')" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">លេខវិក្កយបត្រ (Receipt No)</label>
+                            <input type="text" name="id" required value="${pay ? pay.id : nextInv}" readonly class="w-full px-3.5 py-2.5 rounded-xl border bg-slate-100 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ជ្រើសរើសសិស្ស *</label>
+                            <select name="studentId" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.students.map(s => `<option value="${s.id}" ${pay?.studentId === s.id ? 'selected' : ''}>${s.id} - ${s.nameKh}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រភេទនៃការបង់ប្រាក់ *</label>
+                            <select name="feeType" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                <option value="បង់ថ្លៃសិក្សាប្រចាំខែ" ${pay?.feeType === 'បង់ថ្លៃសិក្សាប្រចាំខែ' ? 'selected' : ''}>បង់ថ្លៃសិក្សាប្រចាំខែ (Monthly)</option>
+                                <option value="បង់ថ្លៃសិក្សាប្រចាំត្រីមាស" ${pay?.feeType === 'បង់ថ្លៃសិក្សាប្រចាំត្រីមាស' ? 'selected' : ''}>បង់ថ្លៃសិក្សាប្រចាំត្រីមាស (Quarterly)</option>
+                                <option value="បង់ថ្លៃសិក្សាប្រចាំឆ្នាំ" ${pay?.feeType === 'បង់ថ្លៃសិក្សាប្រចាំឆ្នាំ' ? 'selected' : ''}>បង់ថ្លៃសិក្សាប្រចាំឆ្នាំ (Annual)</option>
+                                <option value="ឯកសណ្ឋាន និង សៀវភៅពុម្ព" ${pay?.feeType === 'ឯកសណ្ឋាន និង សៀវភៅពុម្ព' ? 'selected' : ''}>ឯកសណ្ឋាន និង សៀវភៅពុម្ព (Uniform/Books)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ចំនួនទឹកប្រាក់ (USD $) *</label>
+                            <input type="number" step="0.01" name="amount" required value="${pay ? pay.amount : 35}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">កាលបរិច្ឆេទបង់ប្រាក់</label>
+                            <input type="date" name="date" required value="${pay ? pay.date : new Date().toISOString().split('T')[0]}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ស្ថានភាពទូទាត់</label>
+                            <select name="status" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                <option value="បង់រួច" ${pay?.status === 'បង់រួច' ? 'selected' : ''}>បង់រួច (Paid)</option>
+                                <option value="ជំពាក់" ${pay?.status === 'ជំពាក់' ? 'selected' : ''}>ជំពាក់ (Unpaid)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">បរិយាយបន្ថែម (Note)</label>
+                        <input type="text" name="note" value="${pay ? pay.note : ''}" placeholder="ឧ. សម្រាប់ខែវិច្ឆិកា ២០២៦" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                    </div>
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                        <button type="button" onclick="closeFormModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-sm">បោះបង់</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-800 text-white text-sm font-bold">រក្សាទុក</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function savePaymentForm(e, editId) {
+            e.preventDefault();
+            const f = e.target;
+            const record = {
+                id: f.id.value,
+                studentId: f.studentId.value,
+                feeType: f.feeType.value,
+                amount: Number(f.amount.value),
+                currency: 'USD',
+                date: f.date.value,
+                status: f.status.value,
+                note: f.note.value.trim()
+            };
+            if (editId) {
+                const idx = db.payments.findIndex(p => p.id === editId);
+                if (idx !== -1) db.payments[idx] = record;
+                showToast('បានធ្វើបច្ចុប្បន្នភាពវិក្កយបត្រ!');
+            } else {
+                db.payments.push(record);
+                showToast('បានកត់ត្រាការបង់ប្រាក់ដោយជោគជ័យ!');
+            }
+            saveDatabase();
+            closeFormModal();
+            renderPayments(document.getElementById('app-content'));
+        }
+
+        function deletePayment(id) {
+            openConfirmModal('លុបវិក្កយបត្រ', `តើអ្នកពិតជាចង់លុបវិក្កយបត្រលេខ ${id} មែនទេ?`, () => {
+                db.payments = db.payments.filter(p => p.id !== id);
+                saveDatabase();
+                showToast('បានលុបវិក្កយបត្ររួចរាល់!');
+                renderPayments(document.getElementById('app-content'));
+            });
+        }
+
+        function viewReceipt(payId) {
+            const p = db.payments.find(x => x.id === payId);
+            if (!p) return;
+            const st = getStudent(p.studentId);
+            const box = document.getElementById('receipt-preview-box');
+            box.innerHTML = `
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-md">
+                    <div class="flex justify-between items-center mb-4 no-print">
+                        <h4 class="font-bold text-blue-900">ទម្រង់វិក្កយបត្របង់ប្រាក់ (Official Receipt)</h4>
+                        <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-blue-800 text-white text-xs font-bold flex items-center gap-2">
+                            <i class="fa-solid fa-print"></i> បោះពុម្ពវិក្កយបត្រ (Print)
+                        </button>
+                    </div>
+                    <div id="printable-area" class="max-w-2xl mx-auto border-2 border-blue-900 p-6 rounded-xl bg-white">
+                        <div class="flex items-center justify-between border-b-2 border-blue-900 pb-4 mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full bg-blue-900 text-amber-400 flex items-center justify-center text-2xl">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <div>
+                                    <h2 class="font-moul text-blue-900 text-base">សាលាញូហូព</h2>
+                                    <p class="font-inter font-bold text-xs text-amber-600">NEW HOPE SCHOOL</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <h3 class="font-moul text-sm text-slate-800">វិក្កយបត្របង់ប្រាក់</h3>
+                                <p class="font-inter text-xs font-bold text-red-600">No: ${p.id}</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3 text-sm mb-4">
+                            <div><span class="text-slate-500">ឈ្មោះសិស្ស៖</span> <strong>${st ? st.nameKh : p.studentId}</strong></div>
+                            <div><span class="text-slate-500">អត្តលេខ៖</span> <strong class="font-inter">${p.studentId}</strong></div>
+                            <div><span class="text-slate-500">កម្រិតសិក្សា៖</span> <strong>${st ? getLevelShort(st.levelId) : '-'}</strong></div>
+                            <div><span class="text-slate-500">កាលបរិច្ឆេទ៖</span> <strong class="font-inter">${p.date}</strong></div>
+                        </div>
+                        <table class="w-full border border-slate-300 text-sm mb-4">
+                            <thead class="bg-blue-50">
+                                <tr>
+                                    <th class="border border-slate-300 p-2 text-left">បរិយាយ (Description)</th>
+                                    <th class="border border-slate-300 p-2 text-right">ទឹកប្រាក់ (Amount)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-slate-300 p-2">${p.feeType} ${p.note ? `(${p.note})` : ''}</td>
+                                    <td class="border border-slate-300 p-2 text-right font-inter font-bold">$${p.amount.toFixed(2)}</td>
+                                </tr>
+                                <tr class="bg-slate-50 font-bold">
+                                    <td class="border border-slate-300 p-2 text-right">សរុបរួម (Total)</td>
+                                    <td class="border border-slate-300 p-2 text-right font-inter text-blue-900">$${p.amount.toFixed(2)}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="flex justify-between text-xs pt-6 text-center">
+                            <div>
+                                <p class="font-bold">ហត្ថលេខាអ្នកបង់ប្រាក់</p>
+                                <p class="mt-8 text-slate-400">............................</p>
+                            </div>
+                            <div>
+                                <p class="font-bold">បេឡាករ / អ្នកទទួលប្រាក់</p>
+                                <p class="mt-8 text-slate-400">............................</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            box.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 7: SCORES & TRANSCRIPT (ព្រឹត្តបត្រពិន្ទុ)
+        // -------------------------------------------------------------------------
+        let scoreFilterLevel = 'LVL-03';
+        let selectedTranscriptStudentId = 'NHS-2026-002';
+
+        function getRankedScoresForLevel(levelId) {
+            const levelScores = db.scores.filter(sc => sc.levelId === levelId).map(sc => {
+                const total = Number(sc.english) + Number(sc.math) + Number(sc.khmer) + Number(sc.computer) + Number(sc.morality);
+                const avg = Number((total / 5).toFixed(2));
+                return { ...sc, total, avg };
+            });
+            levelScores.sort((a, b) => b.avg - a.avg);
+            return levelScores.map((item, idx) => ({ ...item, rank: idx + 1 }));
+        }
+
+        function renderTranscripts(container) {
+            const ranked = getRankedScoresForLevel(scoreFilterLevel);
+            const activeScore = ranked.find(r => r.studentId === selectedTranscriptStudentId) || ranked[0];
+            const activeStudent = activeScore ? getStudent(activeScore.studentId) : null;
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <!-- Score Management Section -->
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden no-print">
+                        <div class="p-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-50/50">
+                            <div class="flex items-center gap-3">
+                                <label class="text-xs font-bold text-slate-600">កម្រិតសិក្សា៖</label>
+                                <select onchange="scoreFilterLevel = this.value; renderTranscripts(document.getElementById('app-content'))"
+                                    class="px-3.5 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+                                    ${db.levels.map(l => `<option value="${l.id}" ${scoreFilterLevel === l.id ? 'selected' : ''}>${l.nameKh}</option>`).join('')}
+                                </select>
+                            </div>
+                            <button onclick="openScoreModal()" class="px-5 py-2.5 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold shadow-md flex items-center gap-2">
+                                <i class="fa-solid fa-plus"></i> បញ្ចូលពិន្ទុសិស្ស
+                            </button>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-600 text-xs uppercase border-b border-slate-200">
+                                        <th class="py-3 px-3">ចំណាត់ថ្នាក់</th>
+                                        <th class="py-3 px-3">ឈ្មោះសិស្ស</th>
+                                        <th class="py-3 px-3 text-center">អង់គ្លេស</th>
+                                        <th class="py-3 px-3 text-center">គណិត</th>
+                                        <th class="py-3 px-3 text-center">ខ្មែរ</th>
+                                        <th class="py-3 px-3 text-center">កុំព្យូទ័រ</th>
+                                        <th class="py-3 px-3 text-center">សីលធម៌</th>
+                                        <th class="py-3 px-3 text-center">មធ្យមភាគ</th>
+                                        <th class="py-3 px-3">និទ្ទេស</th>
+                                        <th class="py-3 px-3 text-right">សកម្មភាព</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    ${ranked.length === 0 ? `
+                                        <tr><td colspan="10" class="py-8 text-center text-slate-400">មិនទាន់មានទិន្នន័យពិន្ទុសម្រាប់ថ្នាក់នេះទេ</td></tr>
+                                    ` : ranked.map(r => {
+                                        const st = getStudent(r.studentId);
+                                        const gInfo = calculateGradeInfo(r.avg);
+                                        return `
+                                            <tr class="hover:bg-blue-50/40">
+                                                <td class="py-3 px-3 font-bold text-blue-900">#${r.rank}</td>
+                                                <td class="py-3 px-3 font-bold">${st ? st.nameKh : r.studentId}</td>
+                                                <td class="py-3 px-3 text-center font-inter">${r.english}</td>
+                                                <td class="py-3 px-3 text-center font-inter">${r.math}</td>
+                                                <td class="py-3 px-3 text-center font-inter">${r.khmer}</td>
+                                                <td class="py-3 px-3 text-center font-inter">${r.computer}</td>
+                                                <td class="py-3 px-3 text-center font-inter">${r.morality}</td>
+                                                <td class="py-3 px-3 text-center font-inter font-bold text-blue-800">${r.avg}</td>
+                                                <td class="py-3 px-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${gInfo.color}">${gInfo.grade}</span></td>
+                                                <td class="py-3 px-3 text-right whitespace-nowrap">
+                                                    <button onclick="selectedTranscriptStudentId='${r.studentId}'; renderTranscripts(document.getElementById('app-content'))" class="px-2.5 py-1 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-bold mr-1">ព្រឹត្តបត្រ</button>
+                                                    <button onclick="openScoreModal('${r.id}')" class="p-1.5 text-amber-600 hover:bg-amber-50 rounded"><i class="fa-solid fa-pen-to-square"></i></button>
+                                                    <button onclick="deleteScore('${r.id}')" class="p-1.5 text-red-600 hover:bg-red-50 rounded"><i class="fa-solid fa-trash-can"></i></button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Printable Transcript Card -->
+                    ${activeScore && activeStudent ? `
+                        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                            <div class="flex justify-between items-center mb-4 no-print">
+                                <h3 class="font-bold text-slate-800">ព្រឹត្តបត្រពិន្ទុសិស្ស (Official Transcript)</h3>
+                                <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-blue-800 text-white text-xs font-bold flex items-center gap-2">
+                                    <i class="fa-solid fa-print"></i> បោះពុម្ពព្រឹត្តបត្រពិន្ទុ
+                                </button>
+                            </div>
+                            <div id="printable-area" class="max-w-3xl mx-auto border-4 border-double border-blue-900 p-8 bg-white">
+                                <div class="text-center mb-4">
+                                    <p class="font-moul text-xs text-blue-900">ព្រះរាជាណាចក្រកម្ពុជា</p>
+                                    <p class="font-moul text-xs text-blue-900">ជាតិ សាសនា ព្រះមហាក្សត្រ</p>
+                                    <div class="mt-3 flex items-center justify-center gap-3">
+                                        <i class="fa-solid fa-graduation-cap text-3xl text-amber-600"></i>
+                                        <div>
+                                            <h2 class="font-moul text-lg text-blue-900">សាលាញូហូព NEW HOPE SCHOOL</h2>
+                                            <p class="text-xs text-slate-500">អប់រំប្រកបដោយគុណភាព សីលធម៌ និងអនាគតភ្លឺស្វាង</p>
+                                        </div>
+                                    </div>
+                                    <h3 class="font-moul text-base text-amber-700 mt-4 underline">ព្រឹត្តបត្រពិន្ទុប្រចាំខែ</h3>
+                                    <p class="text-xs font-bold text-slate-600 mt-1">${activeScore.month}</p>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-3 text-sm bg-blue-50/60 p-4 rounded-xl border border-blue-100 mb-5">
+                                    <div>ឈ្មោះសិស្ស៖ <strong>${activeStudent.nameKh}</strong> (${activeStudent.nameEn})</div>
+                                    <div>អត្តលេខ៖ <strong class="font-inter">${activeStudent.id}</strong></div>
+                                    <div>ភេទ៖ <strong>${activeStudent.gender}</strong></div>
+                                    <div>កម្រិតសិក្សា៖ <strong>${getLevelName(activeStudent.levelId)}</strong></div>
+                                </div>
+
+                                <table class="w-full border-collapse border border-slate-400 text-sm mb-5">
+                                    <thead>
+                                        <tr class="bg-blue-900 text-white">
+                                            <th class="border border-slate-400 p-2.5 text-center w-14">ល.រ</th>
+                                            <th class="border border-slate-400 p-2.5 text-left">មុខវិជ្ជាសិក្សា (Subjects)</th>
+                                            <th class="border border-slate-400 p-2.5 text-center">ពិន្ទុពេញ</th>
+                                            <th class="border border-slate-400 p-2.5 text-center">ពិន្ទុទទួលបាន</th>
+                                            <th class="border border-slate-400 p-2.5 text-center">និទ្ទេស</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${[
+                                            { name: 'ភាសាអង់គ្លេស (English)', val: activeScore.english },
+                                            { name: 'គណិតវិទ្យា (Mathematics)', val: activeScore.math },
+                                            { name: 'ភាសាខ្មែរ (Khmer Literature)', val: activeScore.khmer },
+                                            { name: 'កុំព្យូទ័រ (Computer Studies)', val: activeScore.computer },
+                                            { name: 'សីលធម៌ និង ពលរដ្ឋវិជ្ជា (Morality)', val: activeScore.morality }
+                                        ].map((sub, i) => `
+                                            <tr>
+                                                <td class="border border-slate-400 p-2 text-center font-inter">${i + 1}</td>
+                                                <td class="border border-slate-400 p-2 font-medium">${sub.name}</td>
+                                                <td class="border border-slate-400 p-2 text-center font-inter">100</td>
+                                                <td class="border border-slate-400 p-2 text-center font-inter font-bold">${sub.val}</td>
+                                                <td class="border border-slate-400 p-2 text-center font-inter font-bold">${calculateGradeInfo(sub.val).grade}</td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+
+                                <div class="grid grid-cols-3 gap-4 text-center bg-amber-50 border border-amber-200 p-3 rounded-xl mb-6 text-sm">
+                                    <div>ពិន្ទុសរុប៖ <strong class="font-inter text-blue-900 text-base">${activeScore.total} / 500</strong></div>
+                                    <div>មធ្យមភាគ៖ <strong class="font-inter text-blue-900 text-base">${activeScore.avg}</strong></div>
+                                    <div>ចំណាត់ថ្នាក់៖ <strong class="text-red-600 text-base">លេខ ${activeScore.rank}</strong></div>
+                                </div>
+
+                                <div class="flex justify-between items-end text-xs pt-2">
+                                    <div class="text-center">
+                                        <p class="font-bold">មតិ និងហត្ថលេខាអាណាព្យាបាល</p>
+                                        <p class="mt-10 text-slate-400">........................................</p>
+                                    </div>
+                                    <div class="text-center">
+                                        <p>ថ្ងៃទី២៦ ខែវិច្ឆិកា ឆ្នាំ២០២៦</p>
+                                        <p class="font-bold mt-1">នាយកសាលាញូហូព</p>
+                                        <p class="mt-10 font-moul text-blue-900">នាយកសាលា</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function openScoreModal(editId = null) {
+            const sc = editId ? db.scores.find(s => s.id === editId) : null;
+            openFormModal(sc ? 'កែប្រែពិន្ទុសិស្ស' : 'បញ្ចូលពិន្ទុសិស្សថ្មី', `
+                <form onsubmit="saveScoreForm(event, '${editId || ''}')" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ជ្រើសរើសសិស្ស *</label>
+                            <select name="studentId" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.students.map(s => `<option value="${s.id}" ${sc?.studentId === s.id ? 'selected' : ''}>${s.id} - ${s.nameKh} (${getLevelShort(s.levelId)})</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ប្រចាំខែ / ឆមាស</label>
+                            <input type="text" name="month" required value="${sc ? sc.month : 'ខែវិច្ឆិកា ២០២៦'}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ភាសាអង់គ្លេស (0-100)</label>
+                            <input type="number" min="0" max="100" name="english" required value="${sc ? sc.english : 85}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">គណិតវិទ្យា (0-100)</label>
+                            <input type="number" min="0" max="100" name="math" required value="${sc ? sc.math : 85}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ភាសាខ្មែរ (0-100)</label>
+                            <input type="number" min="0" max="100" name="khmer" required value="${sc ? sc.khmer : 85}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">កុំព្យូទ័រ (0-100)</label>
+                            <input type="number" min="0" max="100" name="computer" required value="${sc ? sc.computer : 85}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">សីលធម៌ (0-100)</label>
+                            <input type="number" min="0" max="100" name="morality" required value="${sc ? sc.morality : 90}" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-inter">
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
+                        <button type="button" onclick="closeFormModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-sm">បោះបង់</button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-blue-800 text-white text-sm font-bold">រក្សាទុកពិន្ទុ</button>
+                    </div>
+                </form>
+            `);
+        }
+
+        function saveScoreForm(e, editId) {
+            e.preventDefault();
+            const f = e.target;
+            const st = getStudent(f.studentId.value);
+            const record = {
+                id: editId || 'SCR-' + Date.now(),
+                studentId: f.studentId.value,
+                levelId: st ? st.levelId : 'LVL-03',
+                month: f.month.value.trim(),
+                english: Number(f.english.value),
+                math: Number(f.math.value),
+                khmer: Number(f.khmer.value),
+                computer: Number(f.computer.value),
+                morality: Number(f.morality.value)
+            };
+            if (editId) {
+                const idx = db.scores.findIndex(s => s.id === editId);
+                if (idx !== -1) db.scores[idx] = record;
+                showToast('បានកែប្រែពិន្ទុសិស្សរួចរាល់!');
+            } else {
+                db.scores.push(record);
+                showToast('បានបញ្ចូលពិន្ទុសិស្សថ្មីដោយជោគជ័យ!');
+            }
+            scoreFilterLevel = record.levelId;
+            selectedTranscriptStudentId = record.studentId;
+            saveDatabase();
+            closeFormModal();
+            renderTranscripts(document.getElementById('app-content'));
+        }
+
+        function deleteScore(id) {
+            openConfirmModal('លុបទិន្នន័យពិន្ទុ', 'តើអ្នកពិតជាចង់លុបពិន្ទុនេះមែនទេ?', () => {
+                db.scores = db.scores.filter(s => s.id !== id);
+                saveDatabase();
+                showToast('បានលុបទិន្នន័យពិន្ទុរួចរាល់!');
+                renderTranscripts(document.getElementById('app-content'));
+            });
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 8: HONOR ROLL (តារាងកិត្តិយស)
+        // -------------------------------------------------------------------------
+        let honorLevelId = 'LVL-03';
+
+        function renderHonorRoll(container) {
+            const top5 = getRankedScoresForLevel(honorLevelId).slice(0, 5);
+            const medals = [
+                { bg: 'bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950', label: 'ចំណាត់ថ្នាក់លេខ ១' },
+                { bg: 'bg-gradient-to-r from-slate-300 to-slate-400 text-slate-900', label: 'ចំណាត់ថ្នាក់លេខ ២' },
+                { bg: 'bg-gradient-to-r from-amber-600 to-orange-700 text-white', label: 'ចំណាត់ថ្នាក់លេខ ៣' },
+                { bg: 'bg-blue-800 text-white', label: 'ចំណាត់ថ្នាក់លេខ ៤' },
+                { bg: 'bg-blue-700 text-white', label: 'ចំណាត់ថ្នាក់លេខ ៥' }
+            ];
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
+                        <div class="flex items-center gap-3">
+                            <label class="text-xs font-bold text-slate-600">ជ្រើសរើសកម្រិតសិក្សា៖</label>
+                            <select onchange="honorLevelId = this.value; renderHonorRoll(document.getElementById('app-content'))"
+                                class="px-4 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.levels.map(l => `<option value="${l.id}" ${honorLevelId === l.id ? 'selected' : ''}>${l.nameKh}</option>`).join('')}
+                            </select>
+                        </div>
+                        <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-print"></i> បោះពុម្ពតារាងកិត្តិយស
+                        </button>
+                    </div>
+
+                    <!-- Ornate Honor Roll Frame -->
+                    <div id="printable-area" class="max-w-4xl mx-auto khmer-cert-border p-8 sm:p-12 shadow-xl rounded-xl">
+                        <div class="khmer-corner khmer-corner-tl"></div>
+                        <div class="khmer-corner khmer-corner-tr"></div>
+                        <div class="khmer-corner khmer-corner-bl"></div>
+                        <div class="khmer-corner khmer-corner-br"></div>
+
+                        <div class="text-center mb-8">
+                            <p class="font-moul text-xs text-blue-900">ព្រះរាជាណាចក្រកម្ពុជា</p>
+                            <p class="font-moul text-xs text-blue-900">ជាតិ សាសនា ព្រះមហាក្សត្រ</p>
+                            <div class="my-3 text-amber-600 text-3xl"><i class="fa-solid fa-crown"></i></div>
+                            <h1 class="font-moul text-2xl sm:text-3xl text-amber-700 tracking-wide">តារាងកិត្តិយស</h1>
+                            <h2 class="font-moul text-base text-blue-900 mt-2">សាលាញូហូព NEW HOPE SCHOOL</h2>
+                            <p class="text-sm font-bold text-slate-700 mt-2">សិស្សពូកែប្រចាំខែ • ${getLevelName(honorLevelId)}</p>
+                        </div>
+
+                        ${top5.length === 0 ? `
+                            <div class="text-center py-12 text-slate-400">មិនទាន់មានទិន្នន័យពិន្ទុសម្រាប់បង្ហាញក្នុងតារាងកិត្តិយសទេ</div>
+                        ` : `
+                            <div class="space-y-4 max-w-2xl mx-auto">
+                                ${top5.map((item, idx) => {
+                                    const st = getStudent(item.studentId);
+                                    const m = medals[idx];
+                                    return `
+                                        <div class="flex items-center justify-between p-4 rounded-2xl border-2 border-amber-300/80 bg-white/90 shadow-sm">
+                                            <div class="flex items-center gap-4">
+                                                <div class="w-12 h-12 rounded-xl ${m.bg} flex items-center justify-center font-moul text-lg shadow">
+                                                    ${idx + 1}
+                                                </div>
+                                                ${getStudentAvatar(st, 'w-12 h-12 text-base')}
+                                                <div>
+                                                    <div class="font-bold text-lg text-blue-950">${st ? st.nameKh : item.studentId}</div>
+                                                    <div class="text-xs font-inter text-slate-500">${st ? st.nameEn : ''} • ${m.label}</div>
+                                                </div>
+                                            </div>
+                                            <div class="text-right">
+                                                <div class="text-xs text-slate-500">មធ្យមភាគ</div>
+                                                <div class="font-inter font-extrabold text-xl text-amber-700">${item.avg}</div>
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        `}
+
+                        <div class="flex justify-end mt-10 pr-6 text-center text-xs">
+                            <div>
+                                <p>ថ្ងៃទី២៦ ខែវិច្ឆិកា ឆ្នាំ២០២៦</p>
+                                <p class="font-bold mt-1 text-blue-900">បានឃើញ និងឯកភាព</p>
+                                <p class="font-moul text-blue-900 mt-10">នាយកសាលាញូហូព</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 9: STUDENT ID CARD (កាតសិស្ស)
+        // -------------------------------------------------------------------------
+        let idCardStudentId = 'NHS-2026-001';
+
+        function renderIdCard(container) {
+            const st = getStudent(idCardStudentId) || db.students[0];
+            if (!st) {
+                container.innerHTML = `<div class="p-8 text-center text-slate-500">សូមបញ្ចូលទិន្នន័យសិស្សជាមុនសិន</div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 no-print">
+                        <div class="flex items-center gap-3">
+                            <label class="text-xs font-bold text-slate-600">ជ្រើសរើសសិស្ស៖</label>
+                            <select onchange="idCardStudentId = this.value; renderIdCard(document.getElementById('app-content'))"
+                                class="px-4 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.students.map(s => `<option value="${s.id}" ${st.id === s.id ? 'selected' : ''}>${s.id} - ${s.nameKh}</option>`).join('')}
+                            </select>
+                        </div>
+                        <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold shadow-md flex items-center gap-2">
+                            <i class="fa-solid fa-print"></i> បោះពុម្ពកាតសិស្ស (Print ID Card)
+                        </button>
+                    </div>
+
+                    <!-- Front and Back ID Cards -->
+                    <div id="printable-area" class="flex flex-col md:flex-row items-center justify-center gap-8 py-6">
+                        
+                        <!-- FRONT CARD -->
+                        <div class="w-[320px] h-[500px] rounded-3xl overflow-hidden shadow-2xl border-2 border-blue-900 bg-white flex flex-col justify-between relative">
+                            <div class="bg-gradient-to-br from-blue-950 via-blue-900 to-blue-800 text-white p-5 text-center relative">
+                                <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-400 text-blue-950 flex items-center justify-center text-2xl shadow-md mb-2">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <h3 class="font-moul text-amber-400 text-sm">សាលាញូហូព</h3>
+                                <p class="font-inter font-bold text-[11px] tracking-widest text-blue-100">NEW HOPE SCHOOL</p>
+                                <div class="mt-2 inline-block px-3 py-0.5 rounded-full bg-white/15 text-[10px] font-bold">បណ្ណសម្គាល់ខ្លួនសិស្ស • STUDENT ID</div>
+                            </div>
+
+                            <div class="px-6 py-4 text-center flex-1 flex flex-col items-center justify-center">
+                                <div class="p-1.5 rounded-full border-4 border-amber-400 shadow-md mb-3">
+                                    ${getStudentAvatar(st, 'w-24 h-24 text-3xl')}
+                                </div>
+                                <h4 class="font-bold text-lg text-blue-950">${st.nameKh}</h4>
+                                <p class="font-inter font-semibold text-xs text-slate-500 uppercase mb-3">${st.nameEn}</p>
+
+                                <div class="w-full bg-slate-50 rounded-xl p-3 border border-slate-200 text-left text-xs space-y-1.5">
+                                    <div class="flex justify-between"><span class="text-slate-500">អត្តលេខ (ID):</span> <strong class="font-inter text-blue-900">${st.id}</strong></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">ភេទ (Gender):</span> <strong>${st.gender}</strong></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">កម្រិត (Level):</span> <strong>${getLevelShort(st.levelId)}</strong></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">ឆ្នាំសិក្សា:</span> <strong class="font-inter">2026 - 2027</strong></div>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-950 text-white py-2.5 px-4 text-center text-[10px] flex items-center justify-between">
+                                <span class="text-amber-400 font-bold">Tel: 012 888 999</span>
+                                <span class="font-inter">www.newhopeschool.edu.kh</span>
+                            </div>
+                        </div>
+
+                        <!-- BACK CARD -->
+                        <div class="w-[320px] h-[500px] rounded-3xl overflow-hidden shadow-2xl border-2 border-blue-900 bg-slate-50 flex flex-col justify-between p-6">
+                            <div>
+                                <div class="text-center border-b border-slate-200 pb-3 mb-4">
+                                    <h4 class="font-moul text-xs text-blue-900">បទបញ្ជាផ្ទៃក្នុងសាលា</h4>
+                                    <p class="font-inter text-[10px] text-slate-500 font-bold">TERMS & CONDITIONS</p>
+                                </div>
+                                <ul class="text-xs text-slate-600 space-y-2.5 list-disc pl-4 leading-relaxed">
+                                    <li>សិស្សត្រូវពាក់កាតសិស្សនេះជានិច្ច នៅពេលចូលក្នុងបរិវេណសាលាញូហូព។</li>
+                                    <li>កាតនេះជាកម្មសិទ្ធិរបស់សាលា និងមិនអាចផ្ទេរឱ្យអ្នកដទៃប្រើប្រាស់បានឡើយ។</li>
+                                    <li>ក្នុងករណីបាត់បង់ សូមរាយការណ៍មកការិយាល័យរដ្ឋបាលសាលាជាបន្ទាន់។</li>
+                                </ul>
+                            </div>
+
+                            <div class="text-center my-4">
+                                <div class="w-24 h-24 mx-auto bg-white p-2 rounded-xl border border-slate-300 flex items-center justify-center">
+                                    <i class="fa-solid fa-qrcode text-6xl text-blue-950"></i>
+                                </div>
+                                <p class="font-inter text-[10px] text-slate-400 mt-1">${st.id}</p>
+                            </div>
+
+                            <div class="text-center border-t border-slate-200 pt-3">
+                                <p class="text-[11px] font-bold text-blue-900">នាយកសាលាញូហូព</p>
+                                <p class="font-moul text-[10px] text-amber-600 mt-6">ហត្ថលេខា និងត្រា</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 10: CERTIFICATE OF COMMENDATION (លិខិតសរសើរ)
+        // -------------------------------------------------------------------------
+        let commStudentId = 'NHS-2026-002';
+        let commReason = 'បានខិតខំប្រឹងប្រែងរៀនសូត្រ ទទួលបានចំណាត់ថ្នាក់លេខ ១ ប្រចាំខែ';
+
+        function renderCommendation(container) {
+            const st = getStudent(commStudentId) || db.students[0];
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4 items-end no-print">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">ជ្រើសរើសសិស្ស</label>
+                            <select onchange="commStudentId = this.value; renderCommendation(document.getElementById('app-content'))"
+                                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.students.map(s => `<option value="${s.id}" ${st?.id === s.id ? 'selected' : ''}>${s.nameKh} (${getLevelShort(s.levelId)})</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">មូលហេតុនៃការសរសើរ</label>
+                            <input type="text" value="${commReason}" onchange="commReason = this.value; renderCommendation(document.getElementById('app-content'))"
+                                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div class="flex justify-end">
+                            <button onclick="window.print()" class="w-full md:w-auto px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-sm font-bold shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-print"></i> បោះពុម្ពលិខិតសរសើរ
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Formal Cambodian Certificate of Appreciation -->
+                    <div id="printable-area" class="max-w-4xl mx-auto khmer-cert-border p-10 sm:p-14 shadow-xl rounded-xl text-center">
+                        <div class="khmer-corner khmer-corner-tl"></div>
+                        <div class="khmer-corner khmer-corner-tr"></div>
+                        <div class="khmer-corner khmer-corner-bl"></div>
+                        <div class="khmer-corner khmer-corner-br"></div>
+
+                        <p class="font-moul text-xs text-blue-900">ព្រះរាជាណាចក្រកម្ពុជា</p>
+                        <p class="font-moul text-xs text-blue-900">ជាតិ សាសនា ព្រះមហាក្សត្រ</p>
+                        <div class="my-3 text-amber-600 text-4xl"><i class="fa-solid fa-award"></i></div>
+
+                        <h2 class="font-moul text-lg text-blue-900">សាលាញូហូព NEW HOPE SCHOOL</h2>
+                        <h1 class="font-moul text-3xl text-amber-700 my-4 tracking-wider">លិខិតសរសើរ</h1>
+
+                        <p class="text-base text-slate-700 mt-4">នាយកសាលាញូហូព សូមសរសើរ និងជូនរង្វាន់លើកទឹកចិត្តដល់សិស្សឈ្មោះ</p>
+                        <h3 class="font-moul text-2xl text-blue-950 my-4">${st ? st.nameKh : ''}</h3>
+                        <p class="text-sm text-slate-600">
+                            ភេទ <strong>${st ? st.gender : ''}</strong> • អត្តលេខ <strong class="font-inter">${st ? st.id : ''}</strong> • សិស្សថ្នាក់ <strong>${st ? getLevelName(st.levelId) : ''}</strong>
+                        </p>
+
+                        <p class="text-base text-slate-800 max-w-xl mx-auto mt-5 leading-relaxed font-medium">
+                            ដែល ${commReason} ក្នុងឆ្នាំសិក្សា ២០២៦-២០២៧។
+                        </p>
+
+                        <div class="flex justify-between items-end mt-12 px-6 text-xs">
+                            <div class="text-left text-slate-500">
+                                <p>លេខ៖ ........./២៦ ស.ញ.ហ</p>
+                            </div>
+                            <div class="text-center">
+                                <p>ធ្វើនៅថ្ងៃទី២៦ ខែវិច្ឆិកា ឆ្នាំ២០២៦</p>
+                                <p class="font-bold text-blue-900 mt-1">នាយកសាលាញូហូព</p>
+                                <p class="font-moul text-blue-900 mt-12">នាយកសាលា</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 11: DIPLOMA / GRADUATION CERTIFICATE (សញ្ញាប័ត្រ)
+        // -------------------------------------------------------------------------
+        let dipStudentId = 'NHS-2026-006';
+        let dipCourseName = 'ថ្នាក់កុំព្យូទ័ររដ្ឋបាល (Computer Office Administration)';
+
+        function renderDiploma(container) {
+            const st = getStudent(dipStudentId) || db.students[0];
+
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm grid grid-cols-1 md:grid-cols-3 gap-4 items-end no-print">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">ជ្រើសរើសសិស្សបញ្ចប់ការសិក្សា</label>
+                            <select onchange="dipStudentId = this.value; renderDiploma(document.getElementById('app-content'))"
+                                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+                                ${db.students.map(s => `<option value="${s.id}" ${st?.id === s.id ? 'selected' : ''}>${s.nameKh} (${s.nameEn})</option>`).join('')}
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">កម្រិត / វគ្គសិក្សាដែលបានបញ្ចប់</label>
+                            <input type="text" value="${dipCourseName}" onchange="dipCourseName = this.value; renderDiploma(document.getElementById('app-content'))"
+                                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div class="flex justify-end">
+                            <button onclick="window.print()" class="w-full md:w-auto px-5 py-2.5 rounded-xl bg-blue-900 hover:bg-blue-950 text-white text-sm font-bold shadow-md flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-print"></i> បោះពុម្ពសញ្ញាប័ត្រ (Print Diploma)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Bilingual Formal Diploma -->
+                    <div id="printable-area" class="max-w-4xl mx-auto khmer-cert-border p-10 sm:p-14 shadow-xl rounded-xl text-center">
+                        <div class="khmer-corner khmer-corner-tl"></div>
+                        <div class="khmer-corner khmer-corner-tr"></div>
+                        <div class="khmer-corner khmer-corner-bl"></div>
+                        <div class="khmer-corner khmer-corner-br"></div>
+
+                        <div class="flex items-center justify-center gap-4 mb-2">
+                            <div class="w-16 h-16 rounded-full bg-blue-900 text-amber-400 flex items-center justify-center text-3xl shadow-lg border-2 border-amber-400">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+                        </div>
+                        <h2 class="font-moul text-xl text-blue-900">សាលាញូហូព</h2>
+                        <p class="font-inter font-extrabold text-sm tracking-widest text-amber-700">NEW HOPE SCHOOL</p>
+
+                        <div class="my-5">
+                            <h1 class="font-moul text-3xl text-amber-700">វិញ្ញាបនបត្របញ្ជាក់ការសិក្សា</h1>
+                            <p class="font-inter font-bold text-sm tracking-widest text-blue-900 mt-1">CERTIFICATE OF COMPLETION / DIPLOMA</p>
+                        </div>
+
+                        <p class="text-sm text-slate-700">នាយកសាលាញូហូព សូមបញ្ជាក់ថា / This is to certify that</p>
+                        <h3 class="font-moul text-2xl text-blue-950 mt-3">${st ? st.nameKh : ''}</h3>
+                        <h4 class="font-inter font-bold text-lg text-slate-700 uppercase mb-4">${st ? st.nameEn : ''}</h4>
+
+                        <p class="text-sm text-slate-600 mb-3">
+                            ថ្ងៃខែឆ្នាំកំណើត (DOB): <strong class="font-inter">${st ? st.dob : ''}</strong> • អត្តលេខ (ID): <strong class="font-inter">${st ? st.id : ''}</strong>
+                        </p>
+
+                        <p class="text-sm text-slate-800 max-w-xl mx-auto leading-relaxed">
+                            បានបញ្ចប់ការសិក្សាដោយជោគជ័យលើកម្មវិធីសិក្សា / Has successfully completed the course of study in
+                        </p>
+                        <div class="my-3 inline-block px-6 py-2 rounded-xl bg-blue-50 border border-blue-200 font-bold text-blue-900 text-base">
+                            ${dipCourseName}
+                        </div>
+
+                        <div class="flex justify-between items-end mt-10 px-8 text-xs">
+                            <div class="text-center">
+                                <div class="w-20 h-20 rounded-full border-2 border-dashed border-amber-600 flex items-center justify-center text-amber-700 font-bold text-[10px] mx-auto">
+                                    ត្រាសាលា<br>OFFICIAL SEAL
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <p>ថ្ងៃទី២៦ ខែវិច្ឆិកា ឆ្នាំ២០២៦ / November 26, 2026</p>
+                                <p class="font-bold text-blue-900 mt-1">នាយកសាលាញូហូព / School Director</p>
+                                <p class="font-moul text-blue-900 mt-10">នាយកសាលា</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // -------------------------------------------------------------------------
+        // MODULE 12: DATABASE MANAGER (ប្រព័ន្ធទិន្នន័យ)
+        // -------------------------------------------------------------------------
+        function renderDatabaseManager(container) {
+            container.innerHTML = `
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-12 h-12 rounded-2xl bg-blue-900 text-amber-400 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-database"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-lg text-slate-800">ស្ថានភាពប្រព័ន្ធទិន្នន័យ (LocalStorage Database)</h3>
+                                <p class="text-xs text-slate-500">ទិន្នន័យទាំងអស់ត្រូវបានរក្សាទុកដោយស្វ័យប្រវត្តិក្នុងកម្មវិធីរុករករបស់អ្នក</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 my-6">
+                            ${[
+                                { label: 'តារាងសិស្ស (Students)', count: db.students.length, icon: 'fa-user-graduate' },
+                                { label: 'តារាងគ្រូ (Teachers)', count: db.teachers.length, icon: 'fa-chalkboard-user' },
+                                { label: 'កម្រិតសិក្សា (Levels)', count: db.levels.length, icon: 'fa-layer-group' },
+                                { label: 'កំណត់ត្រាវត្តមាន (Attendance)', count: db.attendance.length, icon: 'fa-clipboard-check' },
+                                { label: 'វិក្កយបត្របង់ប្រាក់ (Payments)', count: db.payments.length, icon: 'fa-receipt' },
+                                { label: 'ទិន្នន័យពិន្ទុ (Scores)', count: db.scores.length, icon: 'fa-star' }
+                            ].map(t => `
+                                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                                    <div>
+                                        <div class="text-xs text-slate-500 font-medium">${t.label}</div>
+                                        <div class="text-2xl font-extrabold text-blue-900 font-inter mt-1">${t.count}</div>
+                                    </div>
+                                    <i class="fa-solid ${t.icon} text-slate-300 text-2xl"></i>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="border-t border-slate-200 pt-6 flex flex-wrap gap-4">
+                            <button onclick="exportDatabaseJSON()" class="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-md flex items-center gap-2">
+                                <i class="fa-solid fa-download"></i> ទាញយកទិន្នន័យបម្រុងទុក (Export JSON)
+                            </button>
+
+                            <label class="px-5 py-3 rounded-xl bg-blue-800 hover:bg-blue-900 text-white text-sm font-bold shadow-md flex items-center gap-2 cursor-pointer">
+                                <i class="fa-solid fa-upload"></i> នាំចូលទិន្នន័យ (Import JSON)
+                                <input type="file" accept=".json" onchange="importDatabaseJSON(event)" class="hidden">
+                            </label>
+
+                            <button onclick="resetDatabaseToDefault()" class="px-5 py-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-sm font-bold flex items-center gap-2 ml-auto">
+                                <i class="fa-solid fa-rotate-left"></i> កំណត់ទិន្នន័យដើមឡើងវិញ (Reset)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function exportDatabaseJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db, null, 2));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `NewHopeSchool_Backup_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+            showToast('បានទាញយកឯកសារ Database JSON ដោយជោគជ័យ!');
+        }
+
+        function importDatabaseJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if (parsed.students && parsed.levels && parsed.teachers) {
+                        db = parsed;
+                        saveDatabase();
+                        showToast('បាននាំចូលទិន្នន័យ Database ដោយជោគជ័យ!');
+                        renderDatabaseManager(document.getElementById('app-content'));
+                    } else {
+                        showToast('ទម្រង់ឯកសារ JSON មិនត្រឹមត្រូវទេ!', 'error');
+                    }
+                } catch (err) {
+                    showToast('មិនអាចអានឯកសារ JSON បានទេ!', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function resetDatabaseToDefault() {
+            openConfirmModal('កំណត់ Database ឡើងវិញ', 'តើអ្នកពិតជាចង់លុបទិន្នន័យបច្ចុប្បន្ន ហើយត្រឡប់ទៅទិន្នន័យគំរូដើមវិញមែនទេ?', () => {
+                db = JSON.parse(JSON.stringify(defaultDatabase));
+                saveDatabase();
+                showToast('បានកំណត់ទិន្នន័យដើមឡើងវិញរួចរាល់!');
+                renderDatabaseManager(document.getElementById('app-content'));
+            });
+        }
+
+        // =========================================================================
+        // INITIALIZE APP
+        // =========================================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            renderSidebar();
+            renderCurrentView();
+        });
+    </script>
+</body>
+</html>
